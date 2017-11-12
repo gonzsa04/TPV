@@ -69,11 +69,13 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMAP.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PacMan.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMAP.h" />
+    <ClInclude Include="PacMan.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
