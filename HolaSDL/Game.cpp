@@ -36,7 +36,7 @@ void Game::run()
 		handleEvents();//miramos los eventos que ocurran en pantalla
 		update();//mandamos a las entidades que actualicen su posicion
 		render();//mandamos a las entidades que se pinten
-		SDL_Delay(50);
+		SDL_Delay(100);
 	}
 }
 

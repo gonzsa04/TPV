@@ -1,3 +1,4 @@
 ﻿  Game.cpp
+cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.exe
   HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.pdb (Full PDB)

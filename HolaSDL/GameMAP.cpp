@@ -95,7 +95,6 @@ void GameMAP::render(string filename, int tamanyo)
 				destRect.w = destRect.h = tamanyo;
 				textures->renderFrame(renderer, destRect, 4, 3);
 			}
-			SDL_RenderPresent(renderer);
 		}
 	}
 }
