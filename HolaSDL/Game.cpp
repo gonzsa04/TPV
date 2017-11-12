@@ -4,7 +4,7 @@
 Game::Game()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);//iniciamos SDL
-	//damos a la ventana un nombre, con la posicion y el tamaño establecidos en Game
+								  //damos a la ventana un nombre, con la posicion y el tamaño establecidos en Game
 	window = SDL_CreateWindow("My first test wih SDL", winX, winY, winWidth, winHeight, SDL_WINDOW_SHOWN);
 	//le damos valor al renderer a partir de la ventana
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -14,9 +14,9 @@ Game::Game()
 	else
 	{
 		textures = new Texture;//creamos una nueva textura para cada entidad
-		textures->load(renderer, ".\characters1.png", 3, 13);//cargamos cada textura de la lista
+		textures->load(renderer, "./pacman-spritesheet.png", 10, 4);//cargamos cada textura de la lista
 
-		gameMap = GameMAP(5, 5, this);
+		gameMap = GameMAP(28, 29, this);
 		gameMap.render("level01.dat");
 	}
 }
@@ -28,8 +28,8 @@ void Game::run()
 	while (!exit)
 	{
 		handleEvents();//miramos los eventos que ocurran en pantalla
-		update();//mandamos a las entidades que actualicen su posicion
-		render();//mandamos a las entidades que se pinten
+		//update();//mandamos a las entidades que actualicen su posicion
+		//render();//mandamos a las entidades que se pinten
 		SDL_Delay(5);
 	}
 }
@@ -38,7 +38,7 @@ void Game::run()
 void Game::handleEvents()
 {
 	SDL_PollEvent(&event);//si se ha pulsado 
-	//salir ponemos el bool a true para salir del bucle ppal.
+						  //salir ponemos el bool a true para salir del bucle ppal.
 	if (event.type == SDL_QUIT)exit = true;
 }
 
@@ -53,18 +53,17 @@ SDL_Renderer* Game::getRenderer()
 }
 
 //manda a cada una de las entidades del juego que actualicen su posicion
-/*void Game::update()
+void Game::update()
 {
-dog.update();
-helicopter.update();
-}*/
+
+}
 
 //manda a cada una de las entidades que se pinten
 void Game::render()
 {
-SDL_RenderClear(renderer);//borra
-render();//pinta entidades
-SDL_RenderPresent(renderer);//representa (pinta todo)
+	SDL_RenderClear(renderer);//borra
+	//render();//pinta entidades
+	SDL_RenderPresent(renderer);//representa (pinta todo)
 }
 
 //finaliza el juego

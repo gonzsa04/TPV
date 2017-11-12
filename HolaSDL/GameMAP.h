@@ -20,5 +20,5 @@ public:
 	MapCell getCell(int fils, int cols);
 	void leeArchivo(string filename);
 	void render(string filename);
-	~GameMAP();
+	//~GameMAP();
 };

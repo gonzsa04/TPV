@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SDL.h"
 #include "SDL_image.h"
 #include "GameMAP.h"
@@ -11,7 +11,7 @@ private:
 	SDL_Window*	window = nullptr;//puntero a ventana que creara al inicio del juego
 	SDL_Renderer* renderer = nullptr;//lo mismo con un puntero a un renderer
 	SDL_Event event;//aqui se guardan los eventos que ocurren en el juego
-	int winWidth = 800;//tamaño de la pantalla
+	int winWidth = 800;//tamaï¿½o de la pantalla
 	int winHeight = 600;
 	int winX = SDL_WINDOWPOS_CENTERED;//posicion de la pantalla
 	int winY = SDL_WINDOWPOS_CENTERED;
