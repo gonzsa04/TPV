@@ -14,9 +14,9 @@ Game::Game()
 	else
 	{
 		textures = new Texture;//creamos una nueva textura para cada entidad
-		textures->load(renderer, "./pacman-spritesheet.png", 10, 4);//cargamos cada textura de la lista
+		textures->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);//cargamos cada textura de la lista
 
-		gameMap = GameMAP(28, 29, this);
+		gameMap = GameMAP(29, 28, this);
 		gameMap.render("level01.dat");
 	}
 }
