@@ -17,25 +17,27 @@ Game::Game()
 		textures->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
 
 		gameMap = GameMAP(29, 28, this);//creamos el tablero
-		pacman = PacMan(this, 15, 15, 14, 22, 0, 0, 6, 2, 0, 0);
+		gameMap.leeArchivo("level01.dat");//leemos un mapa de archivo y lo cargamos en gameMap
+		pacman = PacMan(this, 20, 20, 14, 22, 0, 0, 6, 2, 0, 0);//creamos a pacman
 	}
 }
 
-//determina si puedes moverte a la siguiente casilla en una direccion dada
-bool Game::nextCell(int posX, int posY, int dirX, int dirY)
+//devuelve el tipo de la casilla contigua en la direccion dada
+MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 {
-	return(gameMap.getCell((posY + dirY)/20, (posX + dirX)/20) != muro);
+	return(gameMap.getCell((posY + dirY)/20, (posX + dirX)/20));
 }
 
 //bucle principal del juego
 void Game::run()
 {
 	//mientras no se haya pulsado salir
-	while (!exit)
+	while (!exit && !win && !gameOver)
 	{
 		handleEvents();//miramos los eventos que ocurran en pantalla
 		update();//mandamos a las entidades que actualicen su posicion
 		render();//mandamos a las entidades que se pinten
+		if (numComida == 0)win = true;//si nos comemos la comida ganamos
 		SDL_Delay(100);
 	}
 }
@@ -47,11 +49,11 @@ void Game::handleEvents()
 	//salir ponemos el bool a true para salir del bucle ppal.
 	if (event.type == SDL_QUIT)exit = true;
 	else if (event.type == SDL_KEYDOWN) 
-	{
-		if (event.key.keysym.sym == SDLK_LEFT)pacman.siguienteDir(-1, 0);
-		else if (event.key.keysym.sym == SDLK_RIGHT)pacman.siguienteDir(1, 0);
-		else if (event.key.keysym.sym == SDLK_UP)pacman.siguienteDir(0, -1);
-		else if (event.key.keysym.sym == SDLK_DOWN)pacman.siguienteDir(0, 1);
+	{//dependiendo de la tecla pulsada establecemos la siguiente direccion de pacman
+		if (event.key.keysym.sym == SDLK_LEFT)pacman.siguienteDir(-20, 0);
+		else if (event.key.keysym.sym == SDLK_RIGHT)pacman.siguienteDir(20, 0);
+		else if (event.key.keysym.sym == SDLK_UP)pacman.siguienteDir(0, -20);
+		else if (event.key.keysym.sym == SDLK_DOWN)pacman.siguienteDir(0, 20);
 	}
 }
 
@@ -67,6 +69,18 @@ SDL_Renderer* Game::getRenderer()
 	return renderer;
 }
 
+//establece una casilla con un valor dado
+void Game::setCell(int fils, int cols, MapCell tipoCasilla) 
+{
+	gameMap.setCell(fils, cols, tipoCasilla);
+}
+
+//suma o resta uno a la comida (1 o -1 como parametros)
+void Game::setComida(int i) 
+{
+	numComida += i;
+}
+
 //manda a cada una de las entidades del juego que actualicen su posicion
 void Game::update()
 {
@@ -77,7 +91,7 @@ void Game::update()
 void Game::render()
 {
 	SDL_RenderClear(renderer);//borra
-	gameMap.render("level01.dat");//le mandamos que se pinte igual que el mapa del archivo
+	gameMap.render();//le mandamos al tablero que se pinte
 	pacman.render();//pinta entidades
 	SDL_RenderPresent(renderer);//representa (pinta todo)
 }

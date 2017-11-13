@@ -30,6 +30,12 @@ MapCell GameMAP::getCell(int fils, int cols)
 	return cells[fils][cols];
 }
 
+//cambia la casilla dada por el valor correspondiente
+void GameMAP::setCell(int fils, int cols, MapCell tipoCasilla)
+{
+	cells[fils][cols] = tipoCasilla;
+}
+
 //lee de archivo un mapa y modifica el array de casillas para que sea igual
 //llamado desde render
 void GameMAP::leeArchivo(string filename)
@@ -46,7 +52,10 @@ void GameMAP::leeArchivo(string filename)
 			archivo >> character;
 			character -= 48;
 			if ((int)character < 4)
+			{
 				cells[i][j] = (MapCell)(int)character;
+				if(cells[i][j] == comida) game->setComida(1);
+			}
 			else
 				cells[i][j] = (MapCell)0;
 		}
@@ -55,9 +64,8 @@ void GameMAP::leeArchivo(string filename)
 }
 
 //pinta el mapa dado a un tamaño dado
-void GameMAP::render(string filename, int tamanyo)
+void GameMAP::render(int tamanyo)
 {
-	leeArchivo(filename);//lee archivo y modifica casillas
 	//lee todas las casillas y pinta el sprite correspondiente de cada una
 	for (int i = 0; i < fils; i++)
 	{

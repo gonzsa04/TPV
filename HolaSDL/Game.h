@@ -20,7 +20,7 @@ private:
 	bool exit = false;//booleano que indica cuando se sale del juego (bucle ppal.)
 	bool error = false;//informa de posibles errores
 	bool gameOver = false; bool win = false;//ganar o perder
-	int casillasComida;//numero de comida del mapa
+	int numComida = 0;//numero de comida del mapa
 	GameMAP gameMap;//tablero
 	PacMan pacman;//jugador
 	Texture* textures;//punteros a textura que contiene todos los sprites del juego
@@ -32,7 +32,9 @@ public:
 	void handleEvents();//mira los eventos que ocurren en pantalla
 	Texture* getTexture();//proporciona la textura
 	SDL_Renderer* getRenderer();//proporciona el renderer
-	bool nextCell(int posX, int posY, int dirX, int dirY);//determina si puedes moverte a la siguiente casilla en una direccion dada
+	void setCell(int fils, int cols, MapCell tipoCasilla);//modifica una casilla del tablero
+	void setComida(int i);//modifica el numero de comida restante
+	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
 	~Game();//cierra la ventana etc. (acaba el juego)
 };
 
