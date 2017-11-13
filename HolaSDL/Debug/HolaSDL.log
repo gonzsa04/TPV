@@ -1,3 +1,10 @@
-﻿  Game.cpp
-  HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.exe
-  HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.pdb (Full PDB)
+﻿  Texture.cpp
+  PacMan.cpp
+  main.cpp
+  GameMAP.cpp
+  Game.cpp
+  Generating Code...
+c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\gamemap.cpp(32): warning C4715: 'GameMAP::getCell': not all control paths return a value
+  LINK : C:\Users\Gonzalo\Desktop\ProyectosSDLPacman\TPV\bin\HolaSDLDebug.exe not found or not built by the last incremental link; performing full link
+  HolaSDL.vcxproj -> C:\Users\Gonzalo\Desktop\ProyectosSDLPacman\TPV\bin\HolaSDLDebug.exe
+  HolaSDL.vcxproj -> C:\Users\Gonzalo\Desktop\ProyectosSDLPacman\TPV\bin\HolaSDLDebug.pdb (Full PDB)

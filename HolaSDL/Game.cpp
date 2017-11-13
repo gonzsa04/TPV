@@ -33,14 +33,18 @@ MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 //bucle principal del juego
 void Game::run()
 {
+	int startTime, frameTime;
 	//mientras no se haya pulsado salir
 	while (!exit && !win && !gameOver)
 	{
+		startTime = SDL_GetTicks();
 		handleEvents();//miramos los eventos que ocurran en pantalla
 		update();//mandamos a las entidades que actualicen su posicion
 		render();//mandamos a las entidades que se pinten
 		if (numComida == 0)win = true;//si nos comemos la comida ganamos
-		SDL_Delay(100);
+		frameTime = SDL_GetTicks() - startTime;
+		if (frameTime < 120)
+			SDL_Delay(120 - frameTime);
 	}
 }
 
