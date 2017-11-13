@@ -16,8 +16,8 @@ PacMan::PacMan(Game* game, int width, int height, int posX, int posY, int dX,
 	renderer = game->getRenderer();
 	destRect.w = width;//tamaño de pacman
 	destRect.h = height;
-	destRect.x = posIniX = posX*20;
-	destRect.y = posIniY = posY*20;
+	destRect.x = posIniX = posX*game->getTam();
+	destRect.y = posIniY = posY*game->getTam();
 	dirX = dX;
 	dirY = dY;
 	fil = f;
@@ -54,16 +54,19 @@ void PacMan::update()
 	if (game->nextCell(destRect.x, destRect.y, dirX, dirY) != muro) 
 	{
 		//si hay comida o vitamina nos las comemos
-		if (game->nextCell(destRect.x, destRect.y, dirX, dirY) == comida) 
+		if (game->nextCell(destRect.x, destRect.y, dirX, dirY) == comida
+			|| game->nextCell(destRect.x, destRect.y, dirX, dirY) == vitamina)
 		{
-			//game->setCell(destRect.x + dirX, destRect.y + dirY, vacio);
+			game->setCell((destRect.x + dirX)/game->getTam(), (destRect.y + dirY)/ game->getTam(), vacio);
 			game->setComida(-1);
 		}
 		destRect.x += dirX;
 		destRect.y += dirY;
 	}
-	if (destRect.x > 27 * 20)destRect.x = 0;//si salimos por la derecha entramos por la izquierda
-	else if (destRect.x < 0)destRect.x = 27 * 20;//y viceversa
+	if (destRect.x > game->getTabCols() * game->getTam())destRect.x = 0;//si salimos por la derecha entramos por la izquierda
+	else if (destRect.x < 0)destRect.x = game->getTabCols() * game->getTam();//y viceversa
+	if (destRect.y > game->getTabFils() * game->getTam())destRect.y = 0;//si salimos por abajo entramos por arriba
+	else if (destRect.y < 0)destRect.y = game->getTabFils() * game->getTam();//y viceversa
 }
 
 //llamado cuando perdemos una vida

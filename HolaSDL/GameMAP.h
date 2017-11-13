@@ -19,9 +19,9 @@ private:
 public:
 	GameMAP();//constructora por defecto que iguala todo a 0 (para cuando se llame al crear game)
 	GameMAP(int fils, int cols, Game* game);//constructora "de verdad" que inicializa los parametros del tablero
-	MapCell getCell(int fils, int cols);//devuelve una casilla en la posicion dada
+	MapCell getCell(int f, int c);//devuelve una casilla en la posicion dada
 	void setCell(int fils, int cols, MapCell tipoCasilla);//cambia la casilla dada por el valor correspondiente
 	void leeArchivo(string filename);//lee de un archivo un mapa y actualiza las casillas del tablero
-	void render(int tamanyo = 20);//pinta el tablero a un tamaño determinado
-	//~GameMAP();//destructora
+	void render(int tamanyo);//pinta el tablero a un tamaño determinado
+	~GameMAP();//destructora
 };

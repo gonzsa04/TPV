@@ -17,11 +17,13 @@ private:
 	int winHeight = 600;
 	int winX = SDL_WINDOWPOS_CENTERED;//posicion de la pantalla
 	int winY = SDL_WINDOWPOS_CENTERED;
+	const int TAM = 20;//tamaño al que se dibujara el juego
 	bool exit = false;//booleano que indica cuando se sale del juego (bucle ppal.)
 	bool error = false;//informa de posibles errores
 	bool gameOver = false; bool win = false;//ganar o perder
 	int numComida = 0;//numero de comida del mapa
-	GameMAP gameMap;//tablero
+	int fils, cols;//filas y columnas del tablero
+	GameMAP* gameMap;//tablero
 	PacMan pacman;//jugador
 	Texture* textures;//punteros a textura que contiene todos los sprites del juego
 public:
@@ -34,6 +36,10 @@ public:
 	SDL_Renderer* getRenderer();//proporciona el renderer
 	void setCell(int fils, int cols, MapCell tipoCasilla);//modifica una casilla del tablero
 	void setComida(int i);//modifica el numero de comida restante
+	void setTabSize(string filename);
+	int getTabFils();
+	int getTabCols();
+	int getTam();//devuelve el tamaño del juego
 	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
 	~Game();//cierra la ventana etc. (acaba el juego)
 };

@@ -1,3 +1,4 @@
+#include <fstream>
 #include "Game.h"
 #include <iostream>
 //inicializa la ventana del juego y todas las entidades
@@ -16,16 +17,17 @@ Game::Game()
 		textures = new Texture;//creamos una nueva textura para cargar la imagen con todos los sprites
 		textures->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
 
-		gameMap = GameMAP(29, 28, this);//creamos el tablero
-		gameMap.leeArchivo("level01.dat");//leemos un mapa de archivo y lo cargamos en gameMap
-		pacman = PacMan(this, 20, 20, 14, 22, 0, 0, 6, 2, 0, 0);//creamos a pacman
+		setTabSize("level01.dat");
+		gameMap = new GameMAP(fils, cols, this);//creamos el tablero
+		gameMap->leeArchivo("level01.dat");//leemos un mapa de archivo y lo cargamos en gameMap
+		pacman = PacMan(this, TAM, TAM, 14, 22, 0, 0, 6, 2, 0, 0);//creamos a pacman
 	}
 }
 
 //devuelve el tipo de la casilla contigua en la direccion dada
 MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 {
-	return(gameMap.getCell((posY + dirY)/20, (posX + dirX)/20));
+	return(gameMap->getCell((posY + dirY)/TAM, (posX + dirX)/TAM));
 }
 
 //bucle principal del juego
@@ -50,29 +52,23 @@ void Game::handleEvents()
 	if (event.type == SDL_QUIT)exit = true;
 	else if (event.type == SDL_KEYDOWN) 
 	{//dependiendo de la tecla pulsada establecemos la siguiente direccion de pacman
-		if (event.key.keysym.sym == SDLK_LEFT)pacman.siguienteDir(-20, 0);
-		else if (event.key.keysym.sym == SDLK_RIGHT)pacman.siguienteDir(20, 0);
-		else if (event.key.keysym.sym == SDLK_UP)pacman.siguienteDir(0, -20);
-		else if (event.key.keysym.sym == SDLK_DOWN)pacman.siguienteDir(0, 20);
+		if (event.key.keysym.sym == SDLK_LEFT)pacman.siguienteDir(-TAM, 0);
+		else if (event.key.keysym.sym == SDLK_RIGHT)pacman.siguienteDir(TAM, 0);
+		else if (event.key.keysym.sym == SDLK_UP)pacman.siguienteDir(0, -TAM);
+		else if (event.key.keysym.sym == SDLK_DOWN)pacman.siguienteDir(0, TAM);
 	}
 }
 
 //devuelve la textura
-Texture* Game::getTexture()
-{
-	return textures;
-}
+Texture* Game::getTexture() { return textures; }
 
 //devuelve el renderer
-SDL_Renderer* Game::getRenderer()
-{
-	return renderer;
-}
+SDL_Renderer* Game::getRenderer() { return renderer; }
 
 //establece una casilla con un valor dado
 void Game::setCell(int fils, int cols, MapCell tipoCasilla) 
 {
-	gameMap.setCell(fils, cols, tipoCasilla);
+	gameMap->setCell(fils, cols, tipoCasilla);
 }
 
 //suma o resta uno a la comida (1 o -1 como parametros)
@@ -80,6 +76,20 @@ void Game::setComida(int i)
 {
 	numComida += i;
 }
+
+void Game::setTabSize(string filename) 
+{
+	ifstream archivo;
+	archivo.open("./Levels/" + filename);
+	archivo >> fils >> cols;
+	archivo.close();
+}
+
+int Game::getTabFils() { return fils; }
+
+int Game::getTabCols() { return cols; }
+
+int Game::getTam() { return TAM; }
 
 //manda a cada una de las entidades del juego que actualicen su posicion
 void Game::update()
@@ -91,7 +101,7 @@ void Game::update()
 void Game::render()
 {
 	SDL_RenderClear(renderer);//borra
-	gameMap.render();//le mandamos al tablero que se pinte
+	gameMap->render(TAM);//le mandamos al tablero que se pinte
 	pacman.render();//pinta entidades
 	SDL_RenderPresent(renderer);//representa (pinta todo)
 }
@@ -99,6 +109,7 @@ void Game::render()
 //finaliza el juego
 Game::~Game()
 {
+	delete(gameMap);
 	SDL_DestroyRenderer(renderer);//destruimos el renderer
 	SDL_DestroyWindow(window);//destruimos la ventana
 	SDL_Quit();

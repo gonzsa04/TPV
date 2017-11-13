@@ -25,15 +25,16 @@ GameMAP::GameMAP(int fils, int cols, Game* game)
 }
 
 //devuelve la casilla de la poscion dada
-MapCell GameMAP::getCell(int fils, int cols)
+MapCell GameMAP::getCell(int f, int c)
 {
-	return cells[fils][cols];
+	if (f < fils && c < cols && f >= 0 && c >= 0)
+		return cells[f][c];
 }
 
 //cambia la casilla dada por el valor correspondiente
 void GameMAP::setCell(int fils, int cols, MapCell tipoCasilla)
 {
-	cells[fils][cols] = tipoCasilla;
+	cells[cols][fils] = tipoCasilla;
 }
 
 //lee de archivo un mapa y modifica el array de casillas para que sea igual
@@ -54,7 +55,7 @@ void GameMAP::leeArchivo(string filename)
 			if ((int)character < 4)
 			{
 				cells[i][j] = (MapCell)(int)character;
-				if(cells[i][j] == comida) game->setComida(1);
+				if(cells[i][j] == comida || cells[i][j] == vitamina) game->setComida(1);
 			}
 			else
 				cells[i][j] = (MapCell)0;
@@ -108,10 +109,10 @@ void GameMAP::render(int tamanyo)
 }
 
 //destructora del tablero
-/*GameMAP::~GameMAP()
+GameMAP::~GameMAP()
 {
 	if (cells != nullptr) {
 		for (int i = 0; i < fils; i++)delete[] cells[i];
 		delete[] cells;
 	}
-}*/
+}
