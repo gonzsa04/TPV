@@ -3,11 +3,17 @@
 #include "SDL_image.h"
 #include "GameMAP.h"
 #include "PacMan.h"
+#include "Fantasma.h"
 #include <iostream>
 using namespace std;
 
+struct Par
+{
+	int x, y;
+};
+
 //clase Game que controla todo el juego
-class Game 
+class Game
 {
 private:
 	SDL_Window*	window = nullptr;//puntero a ventana que creara al inicio del juego
@@ -25,6 +31,7 @@ private:
 	int fils, cols;//filas y columnas del tablero
 	GameMAP* gameMap;//tablero
 	PacMan pacman;//jugador
+	Fantasma fantasmas[4];//array con todos los fantasmas
 	Texture* textures;//punteros a textura que contiene todos los sprites del juego
 public:
 	Game();//carga la ventana y el tablero del juego
@@ -36,9 +43,10 @@ public:
 	SDL_Renderer* getRenderer();//proporciona el renderer
 	void setCell(int fils, int cols, MapCell tipoCasilla);//modifica una casilla del tablero
 	void setComida(int i);//modifica el numero de comida restante
-	void setTabSize(string filename);
+	void leeArchivo(string filename);//lee de un archivo un mapa y actualiza las casillas del tableros
 	int getTabFils();
 	int getTabCols();
+	Fantasma getFantasmas(int i);
 	int getTam();//devuelve el tamaño del juego
 	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
 	~Game();//cierra la ventana etc. (acaba el juego)

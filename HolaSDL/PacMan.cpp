@@ -2,24 +2,21 @@
 #include "Game.h"
 
 //constructora por defecto
-PacMan::PacMan() 
+PacMan::PacMan()
 {
 	destRect.w = destRect.h = destRect.x = destRect.y = dirX = dirY = fil = col = numTicks = numFrames = 0;
 }
 
 //constructora que establece todos los atributos de PacMan
-PacMan::PacMan(Game* game, int width, int height, int posX, int posY, int dX,
-	int dY, int f, int c, int numT, int numF)
+PacMan::PacMan(Game* game, int width, int height, int f, int c, int numT, int numF)
 {
 	this->game = game;
 	texture = game->getTexture();
 	renderer = game->getRenderer();
 	destRect.w = width;//tamaño de pacman
 	destRect.h = height;
-	destRect.x = posIniX = posX*game->getTam();
-	destRect.y = posIniY = posY*game->getTam();
-	dirX = dX;
-	dirY = dY;
+	dirX = 0;
+	dirY = 0;
 	fil = f;
 	col = c;
 	numTicks = numT;
@@ -45,28 +42,28 @@ void PacMan::animate()
 void PacMan::update()
 {
 	//si no hay un muro en la direccion siguiente, toma esa nueva direccion
-	if (game->nextCell(destRect.x, destRect.y, dirXSig, dirYSig) != muro) 
+	if (game->nextCell(destRect.x, destRect.y, dirXSig, dirYSig) != muro)
 	{
 		dirX = dirXSig;
 		dirY = dirYSig;
 	}
 	//si no hay un muro en la direccion actual, avanzamos en esa direccion
-	if (game->nextCell(destRect.x, destRect.y, dirX, dirY) != muro) 
+	if (game->nextCell(destRect.x, destRect.y, dirX, dirY) != muro)
 	{
 		//si hay comida o vitamina nos las comemos
 		if (game->nextCell(destRect.x, destRect.y, dirX, dirY) == comida
 			|| game->nextCell(destRect.x, destRect.y, dirX, dirY) == vitamina)
 		{
-			game->setCell((destRect.x + dirX)/game->getTam(), (destRect.y + dirY)/ game->getTam(), vacio);
+			game->setCell((destRect.x + dirX) / game->getTam(), (destRect.y + dirY) / game->getTam(), vacio);
 			game->setComida(-1);
 		}
 		destRect.x += dirX;
 		destRect.y += dirY;
 	}
-	if (destRect.x > game->getTabCols() * game->getTam())destRect.x = 0;//si salimos por la derecha entramos por la izquierda
-	else if (destRect.x < 0)destRect.x = game->getTabCols() * game->getTam();//y viceversa
-	if (destRect.y > game->getTabFils() * game->getTam())destRect.y = 0;//si salimos por abajo entramos por arriba
-	else if (destRect.y < 0)destRect.y = game->getTabFils() * game->getTam();//y viceversa
+	if (destRect.x >= (game->getTabCols()) * game->getTam())destRect.x = 0;//si salimos por la derecha entramos por la izquierda
+	else if (destRect.x < 0)destRect.x = game->getTabCols() * game->getTam() - 1;//y viceversa
+	if (destRect.y >= (game->getTabFils()) * game->getTam())destRect.y = 0;//si salimos por abajo entramos por arriba
+	else if (destRect.y < 0)destRect.y = game->getTabFils() * game->getTam() - 1;//y viceversa
 }
 
 //llamado cuando perdemos una vida
@@ -78,10 +75,17 @@ void PacMan::morir()
 }
 
 //establece la siguiente direccion a tomar (la tomaremos cuando podamos hacerlo)
-void PacMan::siguienteDir(int newDirX, int newDirY) 
+void PacMan::siguienteDir(int newDirX, int newDirY)
 {
 	dirXSig = newDirX;
 	dirYSig = newDirY;
+}
+
+//establece la posicion de pacman
+void PacMan::setPos(int posY, int posX)
+{
+	posIniX = destRect.x = posX;
+	posIniY = destRect.y = posY;
 }
 
 //devuelve el numero de vidas restantes

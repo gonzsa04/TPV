@@ -4,13 +4,6 @@
 
 using namespace std;
 
-//constructora por defecto
-GameMAP::GameMAP()
-{
-	this->fils = 0;
-	this->cols = 0;
-}
-
 //constructora "de verdad"
 GameMAP::GameMAP(int fils, int cols, Game* game)
 {
@@ -35,33 +28,6 @@ MapCell GameMAP::getCell(int f, int c)
 void GameMAP::setCell(int fils, int cols, MapCell tipoCasilla)
 {
 	cells[cols][fils] = tipoCasilla;
-}
-
-//lee de archivo un mapa y modifica el array de casillas para que sea igual
-//llamado desde render
-void GameMAP::leeArchivo(string filename)
-{
-	ifstream archivo;
-	char character;
-	archivo.open("./Levels/" + filename);
-	archivo >> fils >> cols;
-
-	for (int i = 0; i < fils; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			archivo >> character;
-			character -= 48;
-			if ((int)character < 4)
-			{
-				cells[i][j] = (MapCell)(int)character;
-				if(cells[i][j] == comida || cells[i][j] == vitamina) game->setComida(1);
-			}
-			else
-				cells[i][j] = (MapCell)0;
-		}
-	}
-	archivo.close();
 }
 
 //pinta el mapa dado a un tamaño dado
