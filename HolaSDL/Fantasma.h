@@ -36,6 +36,8 @@ public:
 	void eliminaDir(int x, int y);
 	bool hayFantasma(int dX, int dY);
 	void siguienteDir(int newDirX, int newDirY);//establece la siguiente direccion del fantasma
-	void setPos(int posY, int posX);//establece la posicion del fantasma
+	void setPos(int posY, int posX);//establece la posicion del fantasmas
+	int getPosX();
+	int getPosY();
 };
 

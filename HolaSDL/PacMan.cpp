@@ -41,6 +41,10 @@ void PacMan::animate()
 //actualiza la posicion de pacman a traves de sus direcciones actual y siguiente
 void PacMan::update()
 {
+	for (int i = 0; i < 4; i++)
+		if (destRect.x == game->getFantasmas(i).getPosX() && destRect.y == game->getFantasmas(i).getPosY())
+			morir();
+
 	//si no hay un muro en la direccion siguiente, toma esa nueva direccion
 	if (game->nextCell(destRect.x, destRect.y, dirXSig, dirYSig) != muro)
 	{
@@ -61,9 +65,9 @@ void PacMan::update()
 		destRect.y += dirY;
 	}
 	if (destRect.x >= (game->getTabCols()) * game->getTam())destRect.x = 0;//si salimos por la derecha entramos por la izquierda
-	else if (destRect.x < 0)destRect.x = game->getTabCols() * game->getTam() - 1;//y viceversa
+	else if (destRect.x < 0)destRect.x = game->getTabCols() * game->getTam() - game->getTam();//y viceversa
 	if (destRect.y >= (game->getTabFils()) * game->getTam())destRect.y = 0;//si salimos por abajo entramos por arriba
-	else if (destRect.y < 0)destRect.y = game->getTabFils() * game->getTam() - 1;//y viceversa
+	else if (destRect.y < 0)destRect.y = game->getTabFils() * game->getTam() - game->getTam();//y viceversa
 }
 
 //llamado cuando perdemos una vida
@@ -86,6 +90,16 @@ void PacMan::setPos(int posY, int posX)
 {
 	posIniX = destRect.x = posX;
 	posIniY = destRect.y = posY;
+}
+
+int PacMan::getPosX()
+{
+	return destRect.x;
+}
+
+int PacMan::getPosY()
+{
+	return destRect.y;
 }
 
 //devuelve el numero de vidas restantes

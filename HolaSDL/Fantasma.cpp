@@ -39,6 +39,10 @@ void Fantasma::animate()
 //actualiza la posicion de Fantasma a traves de sus direcciones actual y siguiente
 void Fantasma::update()
 {
+	if (destRect.x == game->getPacman().getPosX() && destRect.y == game->getPacman().getPosY())
+		game->getPacman().morir();
+
+
 	int i = 0;
 	posiblesDir.resize(1);
 	if (game->nextCell(destRect.x, destRect.y, game->getTam(), 0) != muro && !hayFantasma(game->getTam(), 0))
@@ -69,16 +73,22 @@ void Fantasma::update()
 		i++;
 		posiblesDir.resize(i + 1);
 	}
+
 	if (i > 1) 
 	{
 		eliminaDir(dirX, dirY);
 	}
-
+	posiblesDir.erase(posiblesDir.begin() + posiblesDir.size() - 1);
 	int randDir = rand() % posiblesDir.size();
 	dirX = posiblesDir[randDir].x;
 	dirY = posiblesDir[randDir].y;
 	destRect.x += dirX;
 	destRect.y += dirY;
+
+	if (destRect.x >= (game->getTabCols()) * game->getTam())destRect.x = 0;//si salimos por la derecha entramos por la izquierda
+	else if (destRect.x < 0)destRect.x = game->getTabCols() * game->getTam() - game->getTam();//y viceversa
+	if (destRect.y >= (game->getTabFils()) * game->getTam())destRect.y = 0;//si salimos por abajo entramos por arriba
+	else if (destRect.y < 0)destRect.y = game->getTabFils() * game->getTam() - game->getTam();//y viceversas
 }
 
 //llamado cuando perdemos una vida
@@ -93,7 +103,7 @@ void Fantasma::eliminaDir(int x, int y)
 	int i = 0;
 	if (x != 0)x = -x;
 	else y = -y;
-	while (i < posiblesDir.size() && (posiblesDir[i].x != x && posiblesDir[i].y != y))i++;
+	while (i < (int)posiblesDir.size() - 1 && (posiblesDir[i].x != x || posiblesDir[i].y != y))i++;
 	posiblesDir.erase(posiblesDir.begin() + i);
 }
 
@@ -117,4 +127,14 @@ void Fantasma::setPos(int posY, int posX)
 {
 	posIniX = destRect.x = posX;
 	posIniY = destRect.y = posY;
+}
+
+int Fantasma::getPosX()
+{
+	return destRect.x;
+}
+
+int Fantasma::getPosY()
+{
+	return destRect.y;
 }

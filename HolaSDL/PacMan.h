@@ -31,4 +31,6 @@ public:
 	void siguienteDir(int newDirX, int newDirY);//establece la siguiente direccion de pacman
 	int getVidas();//devuelve el numero de vidas que le quedan a pacman
 	void setPos(int posY, int posX);//establece la posicion de pacman
+	int getPosX();
+	int getPosY();
 };

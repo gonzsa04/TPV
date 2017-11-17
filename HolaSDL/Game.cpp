@@ -42,7 +42,7 @@ void Game::run()
 		if (numComida == 0)win = true;//si nos comemos la comida ganamos
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime < 120)
-			SDL_Delay(120 - frameTime);
+			SDL_Delay(180 - frameTime);
 	}
 }
 
@@ -125,6 +125,8 @@ int Game::getTabFils() { return fils; }
 int Game::getTabCols() { return cols; }
 
 Fantasma Game::getFantasmas(int i) { return fantasmas[i]; }
+
+PacMan Game::getPacman() { return pacman; }
 
 int Game::getTam() { return TAM; }
 
