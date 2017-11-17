@@ -48,6 +48,8 @@ public:
 	int getTabCols();
 	Fantasma getFantasmas(int i);
 	PacMan getPacman();
+	void renderHud();
+	void GameOver();
 	int getTam();//devuelve el tamaño del juego
 	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
 	~Game();//cierra la ventana etc. (acaba el juego)

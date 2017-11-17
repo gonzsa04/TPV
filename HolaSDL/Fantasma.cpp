@@ -39,10 +39,6 @@ void Fantasma::animate()
 //actualiza la posicion de Fantasma a traves de sus direcciones actual y siguiente
 void Fantasma::update()
 {
-	if (destRect.x == game->getPacman().getPosX() && destRect.y == game->getPacman().getPosY())
-		game->getPacman().morir();
-
-
 	int i = 0;
 	posiblesDir.resize(1);
 	if (game->nextCell(destRect.x, destRect.y, game->getTam(), 0) != muro && !hayFantasma(game->getTam(), 0))
@@ -74,11 +70,8 @@ void Fantasma::update()
 		posiblesDir.resize(i + 1);
 	}
 
-	if (i > 1) 
-	{
-		eliminaDir(dirX, dirY);
-	}
-	posiblesDir.erase(posiblesDir.begin() + posiblesDir.size() - 1);
+	if (i > 1) { eliminaDir(dirX, dirY); }
+	if (i != 0) { posiblesDir.erase(posiblesDir.begin() + posiblesDir.size() - 1); }
 	int randDir = rand() % posiblesDir.size();
 	dirX = posiblesDir[randDir].x;
 	dirY = posiblesDir[randDir].y;
@@ -137,4 +130,14 @@ int Fantasma::getPosX()
 int Fantasma::getPosY()
 {
 	return destRect.y;
+}
+
+int Fantasma::getDirX()
+{
+	return dirX;
+}
+
+int Fantasma::getDirY()
+{
+	return dirY;
 }

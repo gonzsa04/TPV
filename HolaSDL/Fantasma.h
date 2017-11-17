@@ -39,5 +39,7 @@ public:
 	void setPos(int posY, int posX);//establece la posicion del fantasmas
 	int getPosX();
 	int getPosY();
+	int getDirX();
+	int getDirY();
 };
 

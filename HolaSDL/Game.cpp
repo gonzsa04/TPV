@@ -144,7 +144,25 @@ void Game::render()
 	gameMap->render(TAM);//le mandamos al tablero que se pinte
 	pacman.render();//pinta entidades
 	for (int i = 0; i < 4; i++) fantasmas[i].render();//pintamos los fantasmas
+	renderHud();
 	SDL_RenderPresent(renderer);//representa (pinta todo)
+}
+
+void Game::renderHud()
+{
+	SDL_Rect destRect;
+	destRect.w = destRect.h = TAM;
+	destRect.x = cols*TAM;
+	destRect.y = 1;
+	for (int i = 0; i < pacman.getVidas(); i++) {
+		destRect.x += TAM;
+		textures->renderFrame(renderer, destRect, 6, 2);
+	}
+}
+
+void Game::GameOver()
+{
+	gameOver = true;
 }
 
 //finaliza el juego
