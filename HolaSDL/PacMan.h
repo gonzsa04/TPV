@@ -27,6 +27,8 @@ public:
 	void render();//metodo que manda pintar a pacman
 	void animate();//metodo que manda animar a pacman
 	void update();//metodo que actualiza la posicion de pacman
+	void colisiones();//colisiones con los fantasmas
+	void toroide();//controla cuando pacman se sale de los bordes del mapa
 	void morir();//metodo llamado al morir, resta una vida y devuelve a pacman a posIni
 	void siguienteDir(int newDirX, int newDirY);//establece la siguiente direccion de pacman
 	int getVidas();//devuelve el numero de vidas que le quedan a pacman

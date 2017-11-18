@@ -29,6 +29,7 @@ private:
 	bool gameOver = false; bool win = false;//ganar o perder
 	int numComida = 0;//numero de comida del mapa
 	int fils, cols;//filas y columnas del tablero
+	bool temporizador = false;//temporizador, indica si podemos comer fantasmas
 	GameMAP* gameMap;//tablero
 	PacMan pacman;//jugador
 	Fantasma fantasmas[4];//array con todos los fantasmas
@@ -44,12 +45,14 @@ public:
 	void setCell(int fils, int cols, MapCell tipoCasilla);//modifica una casilla del tablero
 	void setComida(int i);//modifica el numero de comida restante
 	void leeArchivo(string filename);//lee de un archivo un mapa y actualiza las casillas del tableros
-	int getTabFils();
+	int getTabFils();//devuelve filas y columnas del tablero
 	int getTabCols();
-	Fantasma getFantasmas(int i);
-	PacMan getPacman();
-	void renderHud();
-	void GameOver();
+	Fantasma getFantasmas(int i);//devuelve un fantasma
+	void muereFantasma(int i);//manda al fantasma i morirse
+	void fantasmasComibles(bool sonComibles);//establece todos los fantasmas a comibles o no comibles
+	PacMan getPacman();//devuelve a pacman
+	void renderHud();//pinta el numero de vidas
+	void GameOver();//termina el juego
 	int getTam();//devuelve el tamaño del juego
 	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
 	~Game();//cierra la ventana etc. (acaba el juego)

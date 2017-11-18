@@ -32,14 +32,23 @@ MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 void Game::run()
 {
 	int startTime, frameTime;
+	int i = 0;//temporizador
 	//mientras no se haya pulsado salir
 	while (!exit && !win && !gameOver)
 	{
 		startTime = SDL_GetTicks();
+
 		handleEvents();//miramos los eventos que ocurran en pantalla
 		update();//mandamos a las entidades que actualicen su posicion
 		render();//mandamos a las entidades que se pinten
+
 		if (numComida == 0)win = true;//si nos comemos la comida ganamos
+
+		//temporiza el tiempo que puedes comerte a los fantasmas
+		if (temporizador)i++;
+		if (i >= 100) { i = 0; fantasmasComibles(false); }
+
+		//framerate
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime < 120)
 			SDL_Delay(180 - frameTime);
@@ -61,6 +70,42 @@ void Game::handleEvents()
 	}
 }
 
+//manda a cada una de las entidades del juego que actualicen su posicion
+void Game::update()
+{
+	pacman.update();
+	for (int i = 0; i < 4; i++)fantasmas[i].update();
+}
+
+//manda a cada una de las entidades que se pinten
+void Game::render()
+{
+	SDL_RenderClear(renderer);//borra
+	gameMap->render(TAM);//le mandamos al tablero que se pinte a un tamaño
+	pacman.render();//pinta entidades
+	for (int i = 0; i < 4; i++) fantasmas[i].render();//pintamos los fantasmas
+	renderHud();
+	SDL_RenderPresent(renderer);//representa (pinta todo)
+}
+
+void Game::renderHud()
+{
+	SDL_Rect destRect;
+	destRect.w = destRect.h = TAM;
+	destRect.x = cols*TAM;
+	destRect.y = 1;
+	for (int i = 0; i < pacman.getVidas(); i++) {
+		destRect.x += TAM;
+		textures->renderFrame(renderer, destRect, 6, 2);
+	}
+}
+
+//suma o resta uno a la comida (1 o -1 como parametros)
+void Game::setComida(int i)
+{
+	numComida += i;
+}
+
 //devuelve la textura
 Texture* Game::getTexture() { return textures; }
 
@@ -71,12 +116,6 @@ SDL_Renderer* Game::getRenderer() { return renderer; }
 void Game::setCell(int fils, int cols, MapCell tipoCasilla)
 {
 	gameMap->setCell(fils, cols, tipoCasilla);
-}
-
-//suma o resta uno a la comida (1 o -1 como parametros)
-void Game::setComida(int i)
-{
-	numComida += i;
 }
 
 //lee de archivo un mapa y modifica el array de casillas para que sea igual
@@ -124,41 +163,24 @@ int Game::getTabFils() { return fils; }
 
 int Game::getTabCols() { return cols; }
 
-Fantasma Game::getFantasmas(int i) { return fantasmas[i]; }
+Fantasma Game::getFantasmas(int i) { return fantasmas[i]; }//devuelve el fantasma i
+
+void Game::muereFantasma(int i) //mata al fantasma i
+{
+	fantasmas[i].morir();
+}
+
+//establece todos los fantasmas a comibles o no comibles
+void Game::fantasmasComibles(bool sonComibles)
+{
+	for (int i = 0; i < 4; i++)fantasmas[i].modifyComible(sonComibles);
+	if (sonComibles)temporizador = true;//si son comibles inicia el temporizador
+	else temporizador = false;//si dejan de serlo finaliza el temporizador
+}
 
 PacMan Game::getPacman() { return pacman; }
 
 int Game::getTam() { return TAM; }
-
-//manda a cada una de las entidades del juego que actualicen su posicion
-void Game::update()
-{
-	pacman.update();
-	for (int i = 0; i < 4; i++)fantasmas[i].update();
-}
-
-//manda a cada una de las entidades que se pinten
-void Game::render()
-{
-	SDL_RenderClear(renderer);//borra
-	gameMap->render(TAM);//le mandamos al tablero que se pinte
-	pacman.render();//pinta entidades
-	for (int i = 0; i < 4; i++) fantasmas[i].render();//pintamos los fantasmas
-	renderHud();
-	SDL_RenderPresent(renderer);//representa (pinta todo)
-}
-
-void Game::renderHud()
-{
-	SDL_Rect destRect;
-	destRect.w = destRect.h = TAM;
-	destRect.x = cols*TAM;
-	destRect.y = 1;
-	for (int i = 0; i < pacman.getVidas(); i++) {
-		destRect.x += TAM;
-		textures->renderFrame(renderer, destRect, 6, 2);
-	}
-}
 
 void Game::GameOver()
 {
