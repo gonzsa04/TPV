@@ -21,7 +21,8 @@ Game::Game()
 		textures[0]->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
 		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 2);
 		textures[2]->load(renderer, "..//images/FAsustadosAnimation.png", 1, 2);
-		textures[3]->load(renderer, "..//images/Numeros.png", 1, 2);
+		textures[3]->load(renderer, "..//images/YouWin.png", 1, 1);
+		//textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);
 		leeArchivo("level0" + std::to_string(nivel) + ".dat");
 	}
 }
@@ -37,36 +38,43 @@ void Game::run()
 {
 	int startTime, frameTime;
 	//mientras no se haya pulsado salir
-	while (!exit && !gameOver)
+	while (!exit)
 	{
-		startTime = SDL_GetTicks();
-
-		handleEvents();//miramos los eventos que ocurran en pantalla
-		update();//mandamos a las entidades que actualicen su posicion
-		render();//mandamos a las entidades que se pinten
-		colisiones();
-
-		if (numComida == 0)win = true;//si nos comemos la comida ganamos
-
-		//temporiza el tiempo que puedes comerte a los fantasmas
-		if (temporizador)Temp++;
-		if (Temp >= 100) { Temp = 0; fantasmasComibles(false); }
-
-		//framerate
-		frameTime = SDL_GetTicks() - startTime;
-		if (frameTime < 120)
-			SDL_Delay(120 - frameTime);
-
-		if (win == true)
+		while (!win && !gameOver)
 		{
-			if (nivel < 5) 
+			startTime = SDL_GetTicks();
+
+			handleEvents();//miramos los eventos que ocurran en pantalla
+			update();//mandamos a las entidades que actualicen su posicion
+			render();//mandamos a las entidades que se pinten
+			colisiones();//controlamos colisiones entre pacman y fantasmas
+
+			if (numComida == 0)win = true;//si nos comemos la comida ganamos
+
+			//temporiza el tiempo que puedes comerte a los fantasmas
+			if (temporizador)Temp++;
+			if (Temp >= 100) { Temp = 0; fantasmasComibles(false); }
+
+			//framerate
+			frameTime = SDL_GetTicks() - startTime;
+			if (frameTime < 120)
+				SDL_Delay(120 - frameTime);
+
+			if (win && nivel < 5)
 			{
 				nivel++;
 				leeArchivo("level0" + std::to_string(nivel) + ".dat");
 				win = false;
 			}
-			else exit = true;
 		}
+
+		SDL_RenderClear(renderer);//borra
+		if (gameOver)textures[4]->render(renderer);
+		else if (win)textures[3]->render(renderer);
+		SDL_RenderPresent(renderer);//representa (pinta todo)
+		SDL_PollEvent(&event);//si se ha pulsado 
+		//salir ponemos el bool a true para salir del bucle ppal.
+		if (event.type == SDL_QUIT)exit = true;
 	}
 }
 
@@ -78,10 +86,10 @@ void Game::handleEvents()
 	if (event.type == SDL_QUIT)exit = true;
 	else if (event.type == SDL_KEYDOWN)
 	{//dependiendo de la tecla pulsada establecemos la siguiente direccion de pacman
-		if (event.key.keysym.sym == SDLK_LEFT) { pacman.siguienteDir(-TAM, 0); pacman.Gira(180); }
-		else if (event.key.keysym.sym == SDLK_RIGHT) { pacman.siguienteDir(TAM, 0); pacman.Gira(0); }
-		else if (event.key.keysym.sym == SDLK_UP) { pacman.siguienteDir(0, -TAM); pacman.Gira(270); }
-		else if (event.key.keysym.sym == SDLK_DOWN) { pacman.siguienteDir(0, TAM); pacman.Gira(90); }
+		if (event.key.keysym.sym == SDLK_LEFT) pacman.siguienteDir(-TAM, 0);
+		else if (event.key.keysym.sym == SDLK_RIGHT) pacman.siguienteDir(TAM, 0);
+		else if (event.key.keysym.sym == SDLK_UP) pacman.siguienteDir(0, -TAM);
+		else if (event.key.keysym.sym == SDLK_DOWN) pacman.siguienteDir(0, TAM);
 	}
 }
 

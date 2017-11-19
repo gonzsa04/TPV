@@ -46,6 +46,10 @@ void PacMan::update()
 	{
 		dirX = dirXSig;
 		dirY = dirYSig;
+		if (dirX < 0)Gira(180);//giramos a pacman en la direccion correspondiente
+		else if (dirX > 0)Gira(0);
+		else if (dirY < 0)Gira(270);
+		else if (dirY > 0)Gira(90);
 	}
 	//si no hay un muro en la direccion actual, avanzamos en esa direccion
 	if (game->nextCell(destRect.x, destRect.y, dirX, dirY) != muro)

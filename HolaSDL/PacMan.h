@@ -17,7 +17,7 @@ private:
 	int dirX, dirY;//direccion actual
 	int dirXSig, dirYSig;//siguiente direccion a tomar cuando sea posible
 	int vidas;//numero de vidas
-	double angle = 0;
+	double angle = 0;//angulo de giro
 	int fil, col;//informacion de filas y columnas de la textura para ayudar a pintar
 	int numTicks, numFrames;//velocidad de la animacion y numero de frames que tiene
 	SDL_Rect destRect;//rectangulo destino donde se pintara pacman
