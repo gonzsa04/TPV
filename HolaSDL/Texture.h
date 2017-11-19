@@ -18,7 +18,7 @@ private:
 public:
 	bool load(SDL_Renderer*	renderer, string filename, int fils, int cols);//carga una textura de un png (lo hara Game)
 	void render(SDL_Renderer* renderer);//pinta la textura (primer frame)
-	void renderFrame(SDL_Renderer*renderer, const SDL_Rect& destRect, int	fil, int col);//pinta el frame elegido
-	void animation(SDL_Renderer* renderer, const SDL_Rect& destRect, int NumTicks, int NumFrames);
+	void renderFrame(SDL_Renderer*renderer, const SDL_Rect& destRect, int fil, int col);//pinta el frame elegido
+	void animation(SDL_Renderer* renderer, const SDL_Rect& destRect, double ang, int NumTicks, int NumFrames);
 	//anima la textura en funcion de la velocidad y el numero de frames
 };

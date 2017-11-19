@@ -11,7 +11,7 @@ PacMan::PacMan()
 PacMan::PacMan(Game* game, int width, int height, int f, int c, int numT, int numF)
 {
 	this->game = game;
-	texture = game->getTexture();
+	texture = game->getTexture(1);
 	renderer = game->getRenderer();
 	destRect.w = width;//tamaño de pacman
 	destRect.h = height;
@@ -35,14 +35,12 @@ void PacMan::render()
 //manda a la textura de pacman que se anime
 void PacMan::animate()
 {
-	texture->animation(renderer, destRect, numTicks, numFrames);
+	texture->animation(renderer, destRect, angle, numTicks, numFrames);
 }
 
 //actualiza la posicion de pacman a traves de sus direcciones actual y siguiente
 void PacMan::update()
 {
-	colisiones();//miramos si se colisiona con un fantasma
-
 	//si no hay un muro en la direccion siguiente, toma esa nueva direccion
 	if (game->nextCell(destRect.x, destRect.y, dirXSig, dirYSig) != muro)
 	{
@@ -66,29 +64,6 @@ void PacMan::update()
 	}
 
 	toroide();//miramos si se sale del mapa
-}
-
-//mira si hay colisiones con algun fantasma
-void PacMan::colisiones() 
-{
-	int i = 0;
-	//colisiona con el si sus posiciones son iguales o si su siguiente posicion es igual que la del fantasma y la siguiente posicion del fantasma es la misma que la suya
-	while (i < 4 && ((destRect.x != game->getFantasmas(i).getPosX() || destRect.y != game->getFantasmas(i).getPosY()) &&
-		((destRect.x + dirX != game->getFantasmas(i).getPosX() || destRect.y + dirY != game->getFantasmas(i).getPosY()) ||
-			(destRect.x != game->getFantasmas(i).getPosX() + game->getFantasmas(i).getDirX() || destRect.y != game->getFantasmas(i).getPosY() + game->getFantasmas(i).getDirY()))))
-		i++;
-	//si hay colision 
-	if (i < 4) 
-	{
-		//si no son comibles se pierde una vida y tanto pacman como los fantasmas vuelven a su posicion inicial
-		if (!game->getFantasmas(i).getComible()) 
-		{
-			morir();
-			for (int i = 0; i < 4; i++)game->muereFantasma(i);
-		}
-		//si son comibles te comes a ese fantasma
-		else game->muereFantasma(i);
-	}
 }
 
 //controla cuando pacman se sale de los bordes del mapa
@@ -120,11 +95,38 @@ void PacMan::siguienteDir(int newDirX, int newDirY)
 	dirYSig = newDirY;
 }
 
+void PacMan::Gira(double ang)
+{
+	angle = ang;
+}
+
 //establece la posicion de pacman
 void PacMan::setPos(int posY, int posX)
 {
 	posIniX = destRect.x = posX;
 	posIniY = destRect.y = posY;
+}
+
+//devuelven posicion del pacman
+int PacMan::getPosX()
+{
+	return destRect.x;
+}
+
+int PacMan::getPosY()
+{
+	return destRect.y;
+}
+
+//devuelven direccion del pacman
+int PacMan::getDirX()
+{
+	return dirX;
+}
+
+int PacMan::getDirY()
+{
+	return dirY;
 }
 
 //devuelve el numero de vidas restantes

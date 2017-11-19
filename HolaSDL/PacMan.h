@@ -17,6 +17,7 @@ private:
 	int dirX, dirY;//direccion actual
 	int dirXSig, dirYSig;//siguiente direccion a tomar cuando sea posible
 	int vidas;//numero de vidas
+	double angle = 0;
 	int fil, col;//informacion de filas y columnas de la textura para ayudar a pintar
 	int numTicks, numFrames;//velocidad de la animacion y numero de frames que tiene
 	SDL_Rect destRect;//rectangulo destino donde se pintara pacman
@@ -25,12 +26,16 @@ public:
 			 //constructora que inicializa todos los campos de la entidad vistos anteriormente
 	PacMan(Game* game, int width, int height, int f, int c, int numT, int numF);
 	void render();//metodo que manda pintar a pacman
+	void Gira(double ang);
 	void animate();//metodo que manda animar a pacman
 	void update();//metodo que actualiza la posicion de pacman
-	void colisiones();//colisiones con los fantasmas
 	void toroide();//controla cuando pacman se sale de los bordes del mapa
 	void morir();//metodo llamado al morir, resta una vida y devuelve a pacman a posIni
 	void siguienteDir(int newDirX, int newDirY);//establece la siguiente direccion de pacman
 	int getVidas();//devuelve el numero de vidas que le quedan a pacman
 	void setPos(int posY, int posX);//establece la posicion de pacman
+	int getPosX();//devuelven posicion y direccion de pacman
+	int getPosY();
+	int getDirX();
+	int getDirY();
 };

@@ -35,8 +35,11 @@ void Texture::renderFrame(SDL_Renderer*	renderer, const SDL_Rect& destRect, int	
 }
 
 //anima la textura en funcion de la velocidad y el numero de frames
-void Texture::animation(SDL_Renderer* renderer, const SDL_Rect& destRect, int NumTicks, int NumFrames)
+void Texture::animation(SDL_Renderer* renderer, const SDL_Rect& destRect, double ang, int NumTicks, int NumFrames)
 {
+	SDL_Point* centro = new SDL_Point;
+	centro->x = destRect.w / 2;
+	centro->y = destRect.h / 2;
 	srcRect.x = srcRect.w * int(((SDL_GetTicks() / NumTicks) % NumFrames));
-	SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
+	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, ang , centro, SDL_FLIP_NONE);
 }

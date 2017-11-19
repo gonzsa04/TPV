@@ -18,6 +18,7 @@ class Fantasma {
 private:
 	int posIniX, posIniY;//posicion inicial
 	Texture* texture = nullptr;//puntero a su textura. La carga Game y luego se la pasa 
+	Texture* texture2 = nullptr;//puntero a su textura. La carga Game y luego se la pasa 
 	SDL_Renderer* renderer = nullptr;//puntero a renderer, Game se lo pasa
 	Game* game;//puntero a game para pedirle textura y renderer
 	int dirX, dirY;//direccion actual

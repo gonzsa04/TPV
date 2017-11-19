@@ -13,7 +13,7 @@ GameMAP::GameMAP(int fils, int cols, Game* game)
 	this->game = game;
 	cells = new MapCell*[fils];//da tamaño al array de casillas
 	for (int i = 0; i < fils; i++)cells[i] = new MapCell[cols];
-	textures = game->getTexture();//coge el renderer y la textura de game
+	textures = game->getTexture(0);//coge el renderer y la textura de game
 	renderer = game->getRenderer();
 }
 

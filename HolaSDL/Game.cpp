@@ -1,4 +1,5 @@
 #include <fstream>
+#include <string>
 #include "Game.h"
 #include <time.h>
 #include <iostream>
@@ -16,9 +17,12 @@ Game::Game()
 	else
 	{
 		srand(time(nullptr));
-		textures = new Texture;//creamos una nueva textura para cargar la imagen con todos los sprites
-		textures->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
-		leeArchivo("level02.dat");
+		for (int i = 0; i < 4; i++) { textures[i] = new Texture; }//creamos una nueva textura para cargar la imagen con todos los sprites
+		textures[0]->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
+		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 2);
+		textures[2]->load(renderer, "..//images/FAsustadosAnimation.png", 1, 2);
+		textures[3]->load(renderer, "..//images/Numeros.png", 1, 2);
+		leeArchivo("level0" + std::to_string(nivel) + ".dat");
 	}
 }
 
@@ -32,26 +36,37 @@ MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 void Game::run()
 {
 	int startTime, frameTime;
-	int i = 0;//temporizador
 	//mientras no se haya pulsado salir
-	while (!exit && !win && !gameOver)
+	while (!exit && !gameOver)
 	{
 		startTime = SDL_GetTicks();
 
 		handleEvents();//miramos los eventos que ocurran en pantalla
 		update();//mandamos a las entidades que actualicen su posicion
 		render();//mandamos a las entidades que se pinten
+		colisiones();
 
 		if (numComida == 0)win = true;//si nos comemos la comida ganamos
 
 		//temporiza el tiempo que puedes comerte a los fantasmas
-		if (temporizador)i++;
-		if (i >= 100) { i = 0; fantasmasComibles(false); }
+		if (temporizador)Temp++;
+		if (Temp >= 100) { Temp = 0; fantasmasComibles(false); }
 
 		//framerate
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime < 120)
-			SDL_Delay(180 - frameTime);
+			SDL_Delay(120 - frameTime);
+
+		if (win == true)
+		{
+			if (nivel < 5) 
+			{
+				nivel++;
+				leeArchivo("level0" + std::to_string(nivel) + ".dat");
+				win = false;
+			}
+			else exit = true;
+		}
 	}
 }
 
@@ -63,10 +78,10 @@ void Game::handleEvents()
 	if (event.type == SDL_QUIT)exit = true;
 	else if (event.type == SDL_KEYDOWN)
 	{//dependiendo de la tecla pulsada establecemos la siguiente direccion de pacman
-		if (event.key.keysym.sym == SDLK_LEFT)pacman.siguienteDir(-TAM, 0);
-		else if (event.key.keysym.sym == SDLK_RIGHT)pacman.siguienteDir(TAM, 0);
-		else if (event.key.keysym.sym == SDLK_UP)pacman.siguienteDir(0, -TAM);
-		else if (event.key.keysym.sym == SDLK_DOWN)pacman.siguienteDir(0, TAM);
+		if (event.key.keysym.sym == SDLK_LEFT) { pacman.siguienteDir(-TAM, 0); pacman.Gira(180); }
+		else if (event.key.keysym.sym == SDLK_RIGHT) { pacman.siguienteDir(TAM, 0); pacman.Gira(0); }
+		else if (event.key.keysym.sym == SDLK_UP) { pacman.siguienteDir(0, -TAM); pacman.Gira(270); }
+		else if (event.key.keysym.sym == SDLK_DOWN) { pacman.siguienteDir(0, TAM); pacman.Gira(90); }
 	}
 }
 
@@ -77,12 +92,34 @@ void Game::update()
 	for (int i = 0; i < 4; i++)fantasmas[i].update();
 }
 
+void Game::colisiones()
+{	
+	int i = 0;
+	//colisiona con el si sus posiciones son iguales o si su siguiente posicion es igual que la del fantasma y la siguiente posicion del fantasma es la misma que la suya
+	while (i < 4 && ((pacman.getPosX() != getFantasmas(i).getPosX() || pacman.getPosY() != getFantasmas(i).getPosY()) &&
+		((pacman.getPosX() + pacman.getDirX() != getFantasmas(i).getPosX() || pacman.getPosY() + pacman.getDirY() != getFantasmas(i).getPosY()) ||
+		(pacman.getPosX() != getFantasmas(i).getPosX() + getFantasmas(i).getDirX() || pacman.getPosY() != getFantasmas(i).getPosY() + getFantasmas(i).getDirY()))))
+		i++;
+	//si hay colision 
+	if (i < 4)
+	{
+		//si no son comibles se pierde una vida y tanto pacman como los fantasmas vuelven a su posicion inicial
+		if (!getFantasmas(i).getComible())
+		{
+			pacman.morir();
+			for (int i = 0; i < 4; i++)muereFantasma(i);
+		}
+		//si son comibles te comes a ese fantasma
+		else muereFantasma(i);
+	}
+}
+
 //manda a cada una de las entidades que se pinten
 void Game::render()
 {
 	SDL_RenderClear(renderer);//borra
 	gameMap->render(TAM);//le mandamos al tablero que se pinte a un tamaño
-	pacman.render();//pinta entidades
+	pacman.animate();//pinta entidades
 	for (int i = 0; i < 4; i++) fantasmas[i].render();//pintamos los fantasmas
 	renderHud();
 	SDL_RenderPresent(renderer);//representa (pinta todo)
@@ -96,7 +133,7 @@ void Game::renderHud()
 	destRect.y = 1;
 	for (int i = 0; i < pacman.getVidas(); i++) {
 		destRect.x += TAM;
-		textures->renderFrame(renderer, destRect, 6, 2);
+		textures[0]->renderFrame(renderer, destRect, 6, 2);
 	}
 }
 
@@ -107,7 +144,7 @@ void Game::setComida(int i)
 }
 
 //devuelve la textura
-Texture* Game::getTexture() { return textures; }
+Texture* Game::getTexture(int i) { return textures[i]; }
 
 //devuelve el renderer
 SDL_Renderer* Game::getRenderer() { return renderer; }
@@ -127,12 +164,12 @@ void Game::leeArchivo(string filename)
 	archivo.open("./Levels/" + filename);
 	archivo >> fils >> cols;
 
-	pacman = PacMan(this, TAM, TAM, 6, 2, 0, 0);//creamos a pacman
+	pacman = PacMan(this, TAM, TAM, 6, 2, 1, 2);//creamos a pacman
 	gameMap = new GameMAP(fils, cols, this);//creamos el tablero
-	fantasmas[0] = Fantasma(this, TAM, TAM, 0, 0, 0, 0);//creamos los fantasmas
-	fantasmas[1] = Fantasma(this, TAM, TAM, 1, 0, 0, 0);
-	fantasmas[2] = Fantasma(this, TAM, TAM, 2, 0, 0, 0);
-	fantasmas[3] = Fantasma(this, TAM, TAM, 3, 0, 0, 0);
+	fantasmas[0] = Fantasma(this, TAM, TAM, 0, 0, 1, 2);//creamos los fantasmas
+	fantasmas[1] = Fantasma(this, TAM, TAM, 1, 0, 1, 2);
+	fantasmas[2] = Fantasma(this, TAM, TAM, 2, 0, 1, 2);
+	fantasmas[3] = Fantasma(this, TAM, TAM, 3, 0, 1, 2);
 
 	for (int i = 0; i < fils; i++)
 	{
@@ -174,7 +211,7 @@ void Game::muereFantasma(int i) //mata al fantasma i
 void Game::fantasmasComibles(bool sonComibles)
 {
 	for (int i = 0; i < 4; i++)fantasmas[i].modifyComible(sonComibles);
-	if (sonComibles)temporizador = true;//si son comibles inicia el temporizador
+	if (sonComibles) { temporizador = true; Temp = 0; }//si son comibles inicia el temporizador
 	else temporizador = false;//si dejan de serlo finaliza el temporizador
 }
 

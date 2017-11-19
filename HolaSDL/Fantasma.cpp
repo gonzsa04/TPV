@@ -11,7 +11,8 @@ Fantasma::Fantasma()
 Fantasma::Fantasma(Game* game, int width, int height, int f, int c, int numT, int numF)
 {
 	this->game = game;
-	texture = game->getTexture();
+	texture = game->getTexture(0);
+	texture2 = game->getTexture(2);
 	renderer = game->getRenderer();
 	destRect.w = width;//tamaño de fantasma
 	destRect.h = height;
@@ -29,13 +30,13 @@ Fantasma::Fantasma(Game* game, int width, int height, int f, int c, int numT, in
 void Fantasma::render()
 {
 	if(!comible) texture->renderFrame(renderer, destRect, fil, col);
-	else texture->renderFrame(renderer, destRect, 4, 1);
+	else animate();
 }
 
 //manda a la textura de Fantasma que se anime
 void Fantasma::animate()
 {
-	texture->animation(renderer, destRect, numTicks, numFrames);
+	texture2->animation(renderer, destRect, 0, numTicks, numFrames);
 }
 
 //actualiza la posicion de Fantasma a traves de sus direcciones actual y siguiente

@@ -1,3 +1,3 @@
 ﻿  Game.cpp
-d:\jorge\desarrollo de videojuegos-2\tpv\pacman\tpv\holasdl\game.cpp(18): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-  HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.exe
+c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\game.cpp(19): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+  HolaSDL.vcxproj -> C:\Users\Gonzalo\Desktop\ProyectosSDLPacman\TPV\bin\HolaSDLDebug.exe

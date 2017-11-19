@@ -26,27 +26,30 @@ private:
 	const int TAM = 20;//tamaño al que se dibujara el juego
 	bool exit = false;//booleano que indica cuando se sale del juego (bucle ppal.)
 	bool error = false;//informa de posibles errores
-	bool gameOver = false; bool win = false;//ganar o perder
+	bool gameOver = false, win = false;//ganar o perder
 	int numComida = 0;//numero de comida del mapa
 	int fils, cols;//filas y columnas del tablero
+	int nivel = 1;//nivel actual
+	int Temp = 0;//temporizador
 	bool temporizador = false;//temporizador, indica si podemos comer fantasmas
 	GameMAP* gameMap;//tablero
 	PacMan pacman;//jugador
 	Fantasma fantasmas[4];//array con todos los fantasmas
-	Texture* textures;//punteros a textura que contiene todos los sprites del juego
+	Texture* textures[4];//punteros a textura que contiene todos los sprites del juego
 public:
 	Game();//carga la ventana y el tablero del juego
 	void run();//bucle ppal., dentro de el se ejecutan los siguientes metodos
 	void render();//manda a cada una de las entidades que se pinten
 	void update();//manda a cada una de las entidades que actualicen su posicion
 	void handleEvents();//mira los eventos que ocurren en pantalla
-	Texture* getTexture();//proporciona la textura
+	Texture* getTexture(int i);//proporciona la textura
 	SDL_Renderer* getRenderer();//proporciona el renderer
 	void setCell(int fils, int cols, MapCell tipoCasilla);//modifica una casilla del tablero
 	void setComida(int i);//modifica el numero de comida restante
 	void leeArchivo(string filename);//lee de un archivo un mapa y actualiza las casillas del tableros
 	int getTabFils();//devuelve filas y columnas del tablero
 	int getTabCols();
+	void colisiones();
 	Fantasma getFantasmas(int i);//devuelve un fantasma
 	void muereFantasma(int i);//manda al fantasma i morirse
 	void fantasmasComibles(bool sonComibles);//establece todos los fantasmas a comibles o no comibles
