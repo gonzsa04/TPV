@@ -58,6 +58,8 @@ public:
 	void GameOver();//termina el juego
 	int getTam();//devuelve el tamaño del juego
 	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
+	void guardarPartida();
+	void cargarPartida();
 	~Game();//cierra la ventana etc. (acaba el juego)
 };
 

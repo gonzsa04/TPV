@@ -40,7 +40,7 @@ void Game::run()
 	//mientras no se haya pulsado salir
 	while (!exit)
 	{
-		while (!win && !gameOver)
+		while (!exit && !win && !gameOver)
 		{
 			startTime = SDL_GetTicks();
 
@@ -90,6 +90,8 @@ void Game::handleEvents()
 		else if (event.key.keysym.sym == SDLK_RIGHT) pacman.siguienteDir(TAM, 0);
 		else if (event.key.keysym.sym == SDLK_UP) pacman.siguienteDir(0, -TAM);
 		else if (event.key.keysym.sym == SDLK_DOWN) pacman.siguienteDir(0, TAM);
+		else if (event.key.keysym.sym == SDLK_g) guardarPartida();
+		else if (event.key.keysym.sym == SDLK_c) cargarPartida();
 	}
 }
 
@@ -170,38 +172,41 @@ void Game::leeArchivo(string filename)
 	ifstream archivo;
 	char character;
 	archivo.open("./Levels/" + filename);
-	archivo >> fils >> cols;
-
-	pacman = PacMan(this, TAM, TAM, 6, 2, 1, 2);//creamos a pacman
-	gameMap = new GameMAP(fils, cols, this);//creamos el tablero
-	fantasmas[0] = Fantasma(this, TAM, TAM, 0, 0, 1, 2);//creamos los fantasmas
-	fantasmas[1] = Fantasma(this, TAM, TAM, 1, 0, 1, 2);
-	fantasmas[2] = Fantasma(this, TAM, TAM, 2, 0, 1, 2);
-	fantasmas[3] = Fantasma(this, TAM, TAM, 3, 0, 1, 2);
-
-	for (int i = 0; i < fils; i++)
+	if (archivo.is_open()) 
 	{
-		for (int j = 0; j < cols; j++)
+		archivo >> fils >> cols;
+
+		pacman = PacMan(this, TAM, TAM, 6, 2, 1, 2);//creamos a pacman
+		gameMap = new GameMAP(fils, cols, this);//creamos el tablero
+		fantasmas[0] = Fantasma(this, TAM, TAM, 0, 0, 1, 2);//creamos los fantasmas
+		fantasmas[1] = Fantasma(this, TAM, TAM, 1, 0, 1, 2);
+		fantasmas[2] = Fantasma(this, TAM, TAM, 2, 0, 1, 2);
+		fantasmas[3] = Fantasma(this, TAM, TAM, 3, 0, 1, 2);
+
+		for (int i = 0; i < fils; i++)
 		{
-			archivo >> character;
-			character -= 48;
-			if ((int)character < 4)
+			for (int j = 0; j < cols; j++)
 			{
-				gameMap->setCell(j, i, (MapCell)(int)character);
-				if (gameMap->getCell(i, j) == comida || gameMap->getCell(i, j) == vitamina) setComida(1);
-			}
-			else
-			{
-				if ((int)character == 5) { fantasmas[0].setPos(i*TAM, j*TAM); }
-				else if ((int)character == 6) { fantasmas[1].setPos(i*TAM, j*TAM); }
-				else if ((int)character == 7) { fantasmas[2].setPos(i*TAM, j*TAM); }
-				else if ((int)character == 8) { fantasmas[3].setPos(i*TAM, j*TAM); }
-				else if ((int)character == 9) { pacman.setPos(i*TAM, j*TAM); }
-				gameMap->setCell(j, i, (MapCell)0);
+				archivo >> character;
+				character -= 48;
+				if ((int)character < 4)
+				{
+					gameMap->setCell(j, i, (MapCell)(int)character);
+					if (gameMap->getCell(i, j) == comida || gameMap->getCell(i, j) == vitamina) setComida(1);
+				}
+				else
+				{
+					if ((int)character == 5) { fantasmas[0].setPos(i*TAM, j*TAM); }
+					else if ((int)character == 6) { fantasmas[1].setPos(i*TAM, j*TAM); }
+					else if ((int)character == 7) { fantasmas[2].setPos(i*TAM, j*TAM); }
+					else if ((int)character == 8) { fantasmas[3].setPos(i*TAM, j*TAM); }
+					else if ((int)character == 9) { pacman.setPos(i*TAM, j*TAM); }
+					gameMap->setCell(j, i, (MapCell)0);
+				}
 			}
 		}
+		archivo.close();
 	}
-	archivo.close();
 }
 
 int Game::getTabFils() { return fils; }
@@ -230,6 +235,34 @@ int Game::getTam() { return TAM; }
 void Game::GameOver()
 {
 	gameOver = true;
+}
+
+void Game::guardarPartida()
+{
+	ofstream archivo;
+	archivo.open("./Levels/NivelGuardado");
+	archivo << fils << " " << cols << endl;
+
+	for (int i = 0; i < fils; i++) 
+	{
+		for (int j = 0; j < cols; j++) 
+		{
+			if (pacman.getPosX() == j*TAM && pacman.getPosY() == i*TAM)archivo << 9;
+			else if (fantasmas[0].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 5;
+			else if (fantasmas[1].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 6;
+			else if (fantasmas[2].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 7;
+			else if (fantasmas[3].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 8;
+			else archivo << (int)gameMap->getCell(i, j);
+			if (j < cols - 1)archivo << " ";
+		}
+		archivo << endl;
+	}
+	archivo.close();
+}
+
+void Game::cargarPartida() 
+{
+	leeArchivo("NivelGuardado");
 }
 
 //finaliza el juego
