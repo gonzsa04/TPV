@@ -127,6 +127,7 @@ void Fantasma::posiblesDirecciones()
 	if (i > 1) eliminaDir(dirX, dirY);//si hay mas de una posible direccion eliminamos la direccion opuesta a la que llevabamos
 	//para que el fantasma no se de la vuelta sin motivo
 	if (i != 0) { posiblesDir.erase(posiblesDir.begin() + posiblesDir.size() - 1); }//eliminamos la ultima direccion que estara vacia
+	else posiblesDir[0].x = posiblesDir[0].y = 0;
 }
 
 //controla cuando los fantasmas se salen por los extremos del mapa
