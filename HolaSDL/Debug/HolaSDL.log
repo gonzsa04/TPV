@@ -1,3 +1,5 @@
 ﻿  Game.cpp
-d:\jorge\desarrollo de videojuegos-2\tpv\pacman\tpv\holasdl\game.cpp(19): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-  HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.exe
+c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\game.cpp(19): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\game.cpp(308): warning C4156: eliminación de expresión de matriz sin utilizar el formato de matriz de 'delete'; formato de matriz sustituido
+c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\game.cpp(308): warning C4154: eliminación de una expresión de matriz; suministrada una conversión a puntero
+  HolaSDL.vcxproj -> C:\Users\Gonzalo\Desktop\ProyectosSDLPacman\TPV\bin\HolaSDLDebug.exe

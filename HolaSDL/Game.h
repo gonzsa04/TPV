@@ -35,7 +35,7 @@ private:
 	GameMAP* gameMap;//tablero
 	PacMan pacman;//jugador
 	Fantasma fantasmas[4];//array con todos los fantasmas
-	Texture* textures[5];//punteros a textura que contiene todos los sprites del juego
+	Texture* textures[7];//punteros a textura que contiene todos los sprites del juego
 public:
 	Game();//carga la ventana y el tablero del juego
 	void run();//bucle ppal., dentro de el se ejecutan los siguientes metodos

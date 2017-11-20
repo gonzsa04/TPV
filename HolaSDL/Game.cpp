@@ -17,12 +17,14 @@ Game::Game()
 	else
 	{
 		srand(time(nullptr));
-		for (int i = 0; i < 4; i++) { textures[i] = new Texture; }//creamos una nueva textura para cargar la imagen con todos los sprites
+		for (int i = 0; i < 7; i++) { textures[i] = new Texture; }//creamos una nueva textura para cargar la imagen con todos los sprites
 		textures[0]->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
-		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 2);
+		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 4);
 		textures[2]->load(renderer, "..//images/FAsustadosAnimation.png", 1, 2);
 		textures[3]->load(renderer, "..//images/YouWin.png", 1, 1);
-		//textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);
+		textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);
+		textures[5]->load(renderer, "..//images/Menu1.png", 1, 1);
+		textures[6]->load(renderer, "..//images/Menu2.png", 1, 1);
 		leeArchivo("level0" + std::to_string(nivel) + ".dat");
 	}
 }
@@ -36,11 +38,32 @@ MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 //bucle principal del juego
 void Game::run()
 {
-	int startTime, frameTime;
+	int startTime, frameTime, menu = 1;
+	
 	//mientras no se haya pulsado salir
 	while (!exit)
 	{
-		while (!exit && !win && !gameOver)
+		if (event.key.keysym.sym == SDLK_UP) menu = 1;
+		else if (event.key.keysym.sym == SDLK_DOWN) menu = 2;
+		if (menu == 1) 
+		{ 
+			textures[5]->render(renderer); 
+			if (event.key.keysym.sym == SDLK_SPACE)
+			{
+				menu = 3;
+			}
+		}
+		else
+		{
+			textures[6]->render(renderer);
+			if (event.key.keysym.sym == SDLK_SPACE)
+			{
+				exit = true;
+			}
+		}
+		SDL_RenderPresent(renderer);//representa (pinta todo)
+		SDL_PollEvent(&event);//si se ha pulsado 
+		while (!exit && !win && !gameOver && menu == 3)
 		{
 			startTime = SDL_GetTicks();
 
@@ -53,12 +76,12 @@ void Game::run()
 
 			//temporiza el tiempo que puedes comerte a los fantasmas
 			if (temporizador)Temp++;
-			if (Temp >= 100) { Temp = 0; fantasmasComibles(false); }
+			if (Temp >= 50) { Temp = 0; fantasmasComibles(false); }
 
 			//framerate
 			frameTime = SDL_GetTicks() - startTime;
 			if (frameTime < 120)
-				SDL_Delay(120 - frameTime);
+				SDL_Delay(180 - frameTime);
 
 			if (win && nivel < 5)
 			{
@@ -66,13 +89,24 @@ void Game::run()
 				leeArchivo("level0" + std::to_string(nivel) + ".dat");
 				win = false;
 			}
+			if (event.type == SDL_QUIT)exit = true;
 		}
-
-		SDL_RenderClear(renderer);//borra
-		if (gameOver)textures[4]->render(renderer);
-		else if (win)textures[3]->render(renderer);
-		SDL_RenderPresent(renderer);//representa (pinta todo)
-		SDL_PollEvent(&event);//si se ha pulsado 
+		
+		SDL_RenderClear(renderer);
+		if (menu == 3 && gameOver)
+		{ 
+			menu = 1;
+			textures[4]->render(renderer);
+			SDL_RenderPresent(renderer);//representa (pinta todo)
+			SDL_Delay(2000);
+		}
+		else if (menu == 3 && win)
+		{
+			menu = 1;
+			textures[3]->render(renderer); 
+			SDL_RenderPresent(renderer);//representa (pinta todo)
+			SDL_Delay(2000);
+		}
 		//salir ponemos el bool a true para salir del bucle ppal.
 		if (event.type == SDL_QUIT)exit = true;
 	}
@@ -176,7 +210,7 @@ void Game::leeArchivo(string filename)
 	{
 		archivo >> fils >> cols;
 
-		pacman = PacMan(this, TAM, TAM, 6, 2, 1, 2);//creamos a pacman
+		pacman = PacMan(this, TAM, TAM, 6, 2, 12, 4);//creamos a pacman
 		gameMap = new GameMAP(fils, cols, this);//creamos el tablero
 		fantasmas[0] = Fantasma(this, TAM, TAM, 0, 0, 1, 2);//creamos los fantasmas
 		fantasmas[1] = Fantasma(this, TAM, TAM, 1, 0, 1, 2);
@@ -269,6 +303,10 @@ void Game::cargarPartida()
 Game::~Game()
 {
 	delete(gameMap);
+	if (textures != nullptr) {
+		for (int i = 0; i < 7; i++)delete[] textures[i];
+	}
+
 	SDL_DestroyRenderer(renderer);//destruimos el renderer
 	SDL_DestroyWindow(window);//destruimos la ventana
 	SDL_Quit();
