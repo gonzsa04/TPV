@@ -66,9 +66,9 @@ void Game::run()
 			startTime = SDL_GetTicks();
 
 			handleEvents();//miramos los eventos que ocurran en pantalla
+			colisiones();//controlamos colisiones entre pacman y fantasmas
 			update();//mandamos a las entidades que actualicen su posicion
 			render();//mandamos a las entidades que se pinten
-			colisiones();//controlamos colisiones entre pacman y fantasmas
 
 			if (numComida == 0)win = true;//si nos comemos la comida ganamos
 
@@ -140,9 +140,8 @@ void Game::colisiones()
 {	
 	int i = 0;
 	//colisiona con el si sus posiciones son iguales o si su siguiente posicion es igual que la del fantasma y la siguiente posicion del fantasma es la misma que la suya
-	while (i < 4 && ((pacman.getPosX() != getFantasmas(i).getPosX() || pacman.getPosY() != getFantasmas(i).getPosY()) &&
-		((pacman.getPosX() + pacman.getDirX() != getFantasmas(i).getPosX() || pacman.getPosY() + pacman.getDirY() != getFantasmas(i).getPosY()) ||
-		(pacman.getPosX() != getFantasmas(i).getPosX() + getFantasmas(i).getDirX() || pacman.getPosY() != getFantasmas(i).getPosY() + getFantasmas(i).getDirY()))))
+	while (i < 4 && (pacman.getPosX() != getFantasmas(i).getPosX() || pacman.getPosY() != getFantasmas(i).getPosY()) && 
+		(pacman.getPosX() + pacman.getDirX() != getFantasmas(i).getPosX() || pacman.getPosY() + pacman.getDirY() != getFantasmas(i).getPosY()))
 		i++;
 	//si hay colision 
 	if (i < 4)
