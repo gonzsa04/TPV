@@ -17,14 +17,14 @@ Game::Game()
 	else
 	{
 		srand(time(nullptr));
-		for (int i = 0; i < 7; i++) { textures[i] = new Texture; }//creamos una nueva textura para cargar la imagen con todos los sprites
-		textures[0]->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);
-		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 4);
-		textures[2]->load(renderer, "..//images/FAsustadosAnimation.png", 1, 2);
-		textures[3]->load(renderer, "..//images/YouWin.png", 1, 1);
-		textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);
-		textures[5]->load(renderer, "..//images/Menu1.png", 1, 1);
-		textures[6]->load(renderer, "..//images/Menu2.png", 1, 1);
+		for (int i = 0; i < 7; i++) { textures[i] = new Texture; }//array con todas las texturas del juego
+		textures[0]->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);//texturas de tablero
+		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 4);//texturas de pacman
+		textures[2]->load(renderer, "..//images/FAsustadosAnimation.png", 1, 2);//texturas de los fantasmas comibles
+		textures[3]->load(renderer, "..//images/YouWin.png", 1, 1);//textura de ganar
+		textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);//textura de perder
+		textures[5]->load(renderer, "..//images/Menu1.png", 1, 1);//textura de menu modo jugar
+		textures[6]->load(renderer, "..//images/Menu2.png", 1, 1);//textura de menu modo salir
 		leeArchivo("level0" + std::to_string(nivel) + ".dat");
 	}
 }
@@ -43,26 +43,24 @@ void Game::run()
 	//mientras no se haya pulsado salir
 	while (!exit)
 	{
-		if (event.key.keysym.sym == SDLK_UP) menu = 1;
-		else if (event.key.keysym.sym == SDLK_DOWN) menu = 2;
+		if (event.key.keysym.sym == SDLK_UP) menu = 1;//si estamos sobre la opcion jugar
+		else if (event.key.keysym.sym == SDLK_DOWN) menu = 2;//si estamos sobre la opcion salir
 		if (menu == 1) 
 		{ 
-			textures[5]->render(renderer); 
-			if (event.key.keysym.sym == SDLK_SPACE)
-			{
-				menu = 3;
-			}
+			//si estamos sobre la opcion jugar representamos en pantalla con una flecha
+			textures[5]->render(renderer); //si pulsamos espacio jugamos
+			if (event.key.keysym.sym == SDLK_SPACE) menu = 3;
 		}
 		else
 		{
-			textures[6]->render(renderer);
-			if (event.key.keysym.sym == SDLK_SPACE)
-			{
-				exit = true;
-			}
+			//si estamos sobre la opcion salir representamos en pantalla con una flecha
+			textures[6]->render(renderer);//si pulsamos espacio salimos
+			if (event.key.keysym.sym == SDLK_SPACE)exit = true;
 		}
+
 		SDL_RenderPresent(renderer);//representa (pinta todo)
-		SDL_PollEvent(&event);//si se ha pulsado 
+		SDL_PollEvent(&event);//miramos los eventos
+
 		while (!exit && !win && !gameOver && menu == 3)
 		{
 			startTime = SDL_GetTicks();
@@ -93,18 +91,20 @@ void Game::run()
 		}
 		
 		SDL_RenderClear(renderer);
+		//si hemos perdido lo mostramos por pantalla
 		if (menu == 3 && gameOver)
 		{ 
-			menu = 1;
+			menu = 1;//salimos al menu tras un delay
 			textures[4]->render(renderer);
-			SDL_RenderPresent(renderer);//representa (pinta todo)
+			SDL_RenderPresent(renderer);
 			SDL_Delay(2000);
 		}
+		//si hemos ganado lo mostramos por pantalla
 		else if (menu == 3 && win)
 		{
-			menu = 1;
+			menu = 1;//salimos al menu tras un delay
 			textures[3]->render(renderer); 
-			SDL_RenderPresent(renderer);//representa (pinta todo)
+			SDL_RenderPresent(renderer);
 			SDL_Delay(2000);
 		}
 		//salir ponemos el bool a true para salir del bucle ppal.
