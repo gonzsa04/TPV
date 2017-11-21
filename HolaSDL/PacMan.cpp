@@ -123,6 +123,10 @@ int PacMan::getPosY()
 	return destRect.y;
 }
 
+int PacMan::getPosIniX() { return posIniX; }
+
+int PacMan::getPosIniY() { return posIniY; }
+
 //devuelven direccion del pacman
 int PacMan::getDirX()
 {

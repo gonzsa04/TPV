@@ -41,8 +41,10 @@ public:
 	void posiblesDirecciones();//rellena un vector con todas las posibles direcciones que puede tomar el fantasma
 	void toroide();//controla cuando los fantasmas se salen por los extremos del mapa
 	void setPos(int posY, int posX);//establece la posicion del fantasmas
-	int getPosX();//devuelven posicion y direccion del fantasma
+	int getPosX();//devuelven las posiciones inicial y actuals y direccion del fantasma
 	int getPosY();
+	int getPosIniX();
+	int getPosIniY();
 	int getDirX();
 	int getDirY();
 	void modifyComible(bool esComible);//cambia el fantasma a comible o no comible

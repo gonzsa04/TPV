@@ -35,11 +35,10 @@ MapCell Game::nextCell(int posX, int posY, int dirX, int dirY)
 	return(gameMap->getCell((posY + dirY) / TAM, (posX + dirX) / TAM));
 }
 
-//bucle principal del juego
-void Game::run()
+//menu principal del juego
+void Game::menu()
 {
-	int startTime, frameTime, menu = 1;
-	
+	int menu = 1;
 	//mientras no se haya pulsado salir
 	while (!exit)
 	{
@@ -61,40 +60,11 @@ void Game::run()
 			textures[6]->render(renderer);//si pulsamos espacio salimos
 			if (event.key.keysym.sym == SDLK_SPACE)exit = true;
 		}
-
 		SDL_RenderPresent(renderer);//representa (pinta todo)
 		SDL_PollEvent(&event);//miramos los eventos
 
-		while (!exit && !win && !gameOver && menu == 3)
-		{
-			startTime = SDL_GetTicks();
+		run(menu);//bucle ppal
 
-			handleEvents();//miramos los eventos que ocurran en pantalla
-			colisiones();//controlamos colisiones entre pacman y fantasmas
-			update();//mandamos a las entidades que actualicen su posicion
-			render();//mandamos a las entidades que se pinten
-
-			if (numComida == 0)
-				win = true;//si nos comemos la comida ganamos
-
-			//temporiza el tiempo que puedes comerte a los fantasmas
-			if (temporizador)Temp++;
-			if (Temp >= 50) { Temp = 0; fantasmasComibles(false); }
-
-			//framerate
-			frameTime = SDL_GetTicks() - startTime;
-			if (frameTime < 120)
-				SDL_Delay(180 - frameTime);
-
-			if (win && nivel < 5)
-			{
-				nivel++;
-				leeArchivo("level0" + std::to_string(nivel) + ".dat");
-				win = false;
-			}
-			if (event.type == SDL_QUIT)exit = true;
-		}
-		
 		SDL_RenderClear(renderer);
 		//si hemos perdido lo mostramos por pantalla
 		if (menu == 3 && gameOver)
@@ -119,6 +89,41 @@ void Game::run()
 			SDL_Delay(2000);
 		}
 		//salir ponemos el bool a true para salir del bucle ppal.
+		if (event.type == SDL_QUIT)exit = true;
+	}
+}
+
+//bucle principal
+void Game::run(int menu) 
+{
+	int startTime, frameTime;
+	while (!exit && !win && !gameOver && menu == 3)
+	{
+		startTime = SDL_GetTicks();
+
+		handleEvents();//miramos los eventos que ocurran en pantalla
+		colisiones();//controlamos colisiones entre pacman y fantasmas
+		update();//mandamos a las entidades que actualicen su posicion
+		render();//mandamos a las entidades que se pinten
+
+		if (numComida == 0)
+			win = true;//si nos comemos la comida ganamos
+
+					   //temporiza el tiempo que puedes comerte a los fantasmas
+		if (temporizador)Temp++;
+		if (Temp >= 50) { Temp = 0; fantasmasComibles(false); }
+
+		//framerate
+		frameTime = SDL_GetTicks() - startTime;
+		if (frameTime < 120)
+			SDL_Delay(180 - frameTime);
+
+		if (win && nivel < 5)
+		{
+			nivel++;
+			leeArchivo("level0" + std::to_string(nivel) + ".dat");
+			win = false;
+		}
 		if (event.type == SDL_QUIT)exit = true;
 	}
 }
@@ -197,7 +202,7 @@ void Game::renderHud()
 	destRect.x += 4 * TAM;
 	for (int i = 0; i < sScore.length(); i++)
 	{
-		destRect.x += TAM;
+		destRect.x += 3*TAM/4;
 		if(sScore[i] == '0'){ textures[7]->renderFrame(renderer, destRect, 0, 1); }
 		else if (sScore[i] == '1') { textures[7]->renderFrame(renderer, destRect, 0, 2); }
 		else if (sScore[i] == '2') { textures[7]->renderFrame(renderer, destRect, 0, 3); }
@@ -235,6 +240,7 @@ void Game::leeArchivo(string filename)
 {
 	ifstream archivo;
 	char character;
+	numComida = 0;
 	archivo.open("./Levels/" + filename);
 	if (archivo.is_open()) 
 	{
@@ -318,11 +324,11 @@ void Game::guardarPartida()
 	{
 		for (int j = 0; j < cols; j++) 
 		{
-			if (pacman.getPosX() == j*TAM && pacman.getPosY() == i*TAM)archivo << 9;
-			else if (fantasmas[0].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 5;
-			else if (fantasmas[1].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 6;
-			else if (fantasmas[2].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 7;
-			else if (fantasmas[3].getPosX() == j*TAM && fantasmas[0].getPosY() == i*TAM)archivo << 8;
+			if (pacman.getPosIniX() == j*TAM && pacman.getPosIniY() == i*TAM)archivo << 9;
+			else if (fantasmas[0].getPosIniX() == j*TAM && fantasmas[0].getPosIniY() == i*TAM)archivo << 5;
+			else if (fantasmas[1].getPosIniX() == j*TAM && fantasmas[0].getPosIniY() == i*TAM)archivo << 6;
+			else if (fantasmas[2].getPosIniX() == j*TAM && fantasmas[0].getPosIniY() == i*TAM)archivo << 7;
+			else if (fantasmas[3].getPosIniX() == j*TAM && fantasmas[0].getPosIniY() == i*TAM)archivo << 8;
 			else archivo << (int)gameMap->getCell(i, j);
 			if (j < cols - 1)archivo << " ";
 		}

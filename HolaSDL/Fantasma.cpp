@@ -157,6 +157,10 @@ int Fantasma::getPosY()
 	return destRect.y;
 }
 
+int Fantasma::getPosIniX() { return posIniX; }
+
+int Fantasma::getPosIniY() { return posIniY; }
+
 //devuelven direccion del fantasma
 int Fantasma::getDirX()
 {

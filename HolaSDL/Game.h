@@ -38,7 +38,8 @@ private:
 	Texture* textures[8];//punteros a textura que contiene todos los sprites del juego
 public:
 	Game();//carga la ventana y el tablero del juego
-	void run();//bucle ppal., dentro de el se ejecutan los siguientes metodos
+	void menu();//menu principal del juego
+	void run(int menu);//bucle ppal., dentro de el se ejecutan los siguientes metodos
 	void render();//manda a cada una de las entidades que se pinten
 	void update();//manda a cada una de las entidades que actualicen su posicion
 	void handleEvents();//mira los eventos que ocurren en pantalla

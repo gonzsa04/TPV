@@ -36,6 +36,8 @@ public:
 	void setPos(int posY, int posX);//establece la posicion de pacman
 	int getPosX();//devuelven posicion y direccion de pacman
 	int getPosY();
+	int getPosIniX();
+	int getPosIniY();
 	int getDirX();
 	int getDirY();
 };
