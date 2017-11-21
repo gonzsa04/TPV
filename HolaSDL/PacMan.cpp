@@ -54,7 +54,7 @@ void PacMan::update()
 	//si no hay un muro en la direccion actual, avanzamos en esa direccion
 	if (game->nextCell(destRect.x, destRect.y, dirX, dirY) != muro)
 	{
-		//si hay comida o vitamina nos las comemos
+		//si hay comida o vitamina nos las comemos y sumamos 10 a la puntuacion
 		if (game->nextCell(destRect.x, destRect.y, dirX, dirY) == comida
 			|| game->nextCell(destRect.x, destRect.y, dirX, dirY) == vitamina)
 		{

@@ -1,4 +1,4 @@
 ﻿  Game.cpp
-c:\users\guillermo\desktop\tpv\tpv\holasdl\game.cpp(19): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-c:\users\guillermo\desktop\tpv\tpv\holasdl\game.cpp(200): warning C4018: '<': no coinciden signed/unsigned
-  HolaSDL.vcxproj -> C:\Users\guillermo\Desktop\Tpv\TPV\bin\HolaSDLDebug.exe
+d:\jorge\desarrollo de videojuegos-2\tpv\pacman\tpv\holasdl\game.cpp(19): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+d:\jorge\desarrollo de videojuegos-2\tpv\pacman\tpv\holasdl\game.cpp(207): warning C4018: '<': no coinciden signed/unsigned
+  HolaSDL.vcxproj -> D:\Jorge\Desarrollo de Videojuegos-2\TPV\Pacman\TPV\bin\HolaSDLDebug.exe

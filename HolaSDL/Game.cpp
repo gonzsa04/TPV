@@ -25,7 +25,7 @@ Game::Game()
 		textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);//textura de perder
 		textures[5]->load(renderer, "..//images/Menu1.png", 1, 1);//textura de menu modo jugar
 		textures[6]->load(renderer, "..//images/Menu2.png", 1, 1);//textura de menu modo salir
-		textures[7]->load(renderer, "..//images/score.png", 2, 6);
+		textures[7]->load(renderer, "..//images/score.png", 2, 6);//texturas de la puntuacion
 	}
 }
 
@@ -137,8 +137,8 @@ void Game::handleEvents()
 		else if (event.key.keysym.sym == SDLK_RIGHT) pacman.siguienteDir(TAM, 0);
 		else if (event.key.keysym.sym == SDLK_UP) pacman.siguienteDir(0, -TAM);
 		else if (event.key.keysym.sym == SDLK_DOWN) pacman.siguienteDir(0, TAM);
-		else if (event.key.keysym.sym == SDLK_g) guardarPartida();
-		else if (event.key.keysym.sym == SDLK_c) cargarPartida();
+		else if (event.key.keysym.sym == SDLK_g) guardarPartida();//si pulsas g guardas partida
+		else if (event.key.keysym.sym == SDLK_c) cargarPartida();//si pulsas c cargas partida
 	}
 }
 
@@ -165,8 +165,12 @@ void Game::colisiones()
 			pacman.morir();
 			for (int i = 0; i < 4; i++)muereFantasma(i);
 		}
-		//si son comibles te comes a ese fantasma
-		else muereFantasma(i);
+		//si son comibles te comes a ese fantasma y sumas 100 puntos
+		else 
+		{
+			muereFantasma(i);
+			addScore(100);
+		}
 	}
 }
 
@@ -181,12 +185,14 @@ void Game::render()
 	SDL_RenderPresent(renderer);//representa (pinta todo)
 }
 
+//pinta las vidas y la puntuacion
 void Game::renderHud()
 {
 	SDL_Rect destRect;
 	destRect.w = destRect.h = TAM;
 	destRect.x = cols*TAM;
 	destRect.y = 0;
+	//pintamos las vidas
 	for (int i = 0; i < pacman.getVidas(); i++) {
 		destRect.x += TAM;
 		textures[0]->renderFrame(renderer, destRect, 6, 2);
@@ -197,6 +203,7 @@ void Game::renderHud()
 	textures[7]->renderFrame(renderer, destRect, 0, 0);
 	string sScore = std::to_string(score);
 	destRect.x += 4 * TAM;
+	//pintamos puntuacion
 	for (int i = 0; i < sScore.length(); i++)
 	{
 		destRect.x += 3*TAM/4;
@@ -307,11 +314,13 @@ void Game::GameOver()
 	gameOver = true;
 }
 
+//añade puntos, llamado al comer comida vitaminas o fantasmas
 void Game::addScore(int ascore)
 {
 	score += ascore;
 }
 
+//guarda partida escribiendo la situacion de la misma en archivo de texto
 void Game::guardarPartida()
 {
 	ofstream archivo;
@@ -338,6 +347,7 @@ void Game::guardarPartida()
 	archivo.close();
 }
 
+//carga una partida guardada en un archivo de texto
 void Game::cargarPartida() 
 {
 	leeArchivo("NivelGuardado");
