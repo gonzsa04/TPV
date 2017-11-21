@@ -293,7 +293,6 @@ Fantasma Game::getFantasmas(int i) { return fantasmas[i]; }//devuelve el fantasm
 
 void Game::muereFantasma(int i) //mata al fantasma i
 {
-	addScore(100);
 	fantasmas[i].morir();
 }
 
