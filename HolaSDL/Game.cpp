@@ -67,26 +67,23 @@ void Game::menu()
 
 		SDL_RenderClear(renderer);
 		//si hemos perdido lo mostramos por pantalla
-		if (menu == 3 && gameOver)
+		if (menu == 3)
 		{ 
-			menu = 1;//salimos al menu tras un delay
-			gameOver = false;
+			menu = 1;
 			nivel = 1;
 			score = 0;
-			textures[4]->render(renderer);
+			if (gameOver) 
+			{
+				gameOver = false;
+				textures[4]->render(renderer);
+			}
+			else if (win)
+			{
+				win = false;
+				textures[3]->render(renderer);
+			}
 			SDL_RenderPresent(renderer);
-			SDL_Delay(2000);
-		}
-		//si hemos ganado lo mostramos por pantalla
-		else if (menu == 3 && win)
-		{
-			menu = 1;//salimos al menu tras un delay
-			win = false;
-			nivel = 1;
-			score = 0;
-			textures[3]->render(renderer); 
-			SDL_RenderPresent(renderer);
-			SDL_Delay(2000);
+			SDL_Delay(2000);//salimos al menu tras un delay
 		}
 		//salir ponemos el bool a true para salir del bucle ppal.
 		if (event.type == SDL_QUIT)exit = true;
@@ -116,7 +113,7 @@ void Game::run(int menu)
 		//framerate
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime < 120)
-			SDL_Delay(180 - frameTime);
+			SDL_Delay(60 - frameTime);
 
 		if (win && nivel < 5)
 		{
@@ -276,6 +273,7 @@ void Game::leeArchivo(string filename)
 			}
 		}
 		archivo >> score;
+		archivo >> nivel;
 		archivo.close();
 	}
 }
@@ -335,6 +333,8 @@ void Game::guardarPartida()
 		archivo << endl;
 	}
 	archivo << score;
+	archivo << endl;
+	archivo << nivel;
 	archivo.close();
 }
 
