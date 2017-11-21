@@ -269,6 +269,7 @@ void Game::leeArchivo(string filename)
 				}
 			}
 		}
+		archivo >> score;
 		archivo.close();
 	}
 }
@@ -327,6 +328,7 @@ void Game::guardarPartida()
 		}
 		archivo << endl;
 	}
+	archivo << score;
 	archivo.close();
 }
 
