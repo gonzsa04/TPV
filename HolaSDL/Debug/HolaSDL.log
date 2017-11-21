@@ -1,4 +1,6 @@
-﻿  Game.cpp
+﻿  PacMan.cpp
+  Game.cpp
 c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\game.cpp(19): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-cl : Línea de comandos warning D9028: error de recompilación mínimo, revirtiendo a la compilación normal
+c:\users\gonzalo\desktop\proyectossdlpacman\tpv\holasdl\game.cpp(198): warning C4018: '<': no coinciden signed/unsigned
+  Generando código...
   HolaSDL.vcxproj -> C:\Users\Gonzalo\Desktop\ProyectosSDLPacman\TPV\bin\HolaSDLDebug.exe

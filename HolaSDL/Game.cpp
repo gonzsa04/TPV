@@ -17,7 +17,7 @@ Game::Game()
 	else
 	{
 		srand(time(nullptr));
-		for (int i = 0; i < 7; i++) { textures[i] = new Texture; }//array con todas las texturas del juego
+		for (int i = 0; i < 8; i++) { textures[i] = new Texture; }//array con todas las texturas del juego
 		textures[0]->load(renderer, "..//images/pacman-spritesheet.png", 8, 4);//texturas de tablero
 		textures[1]->load(renderer, "..//images/PacmanAnimation.png", 1, 4);//texturas de pacman
 		textures[2]->load(renderer, "..//images/FAsustadosAnimation.png", 1, 2);//texturas de los fantasmas comibles
@@ -25,7 +25,7 @@ Game::Game()
 		textures[4]->load(renderer, "..//images/Game-Over.png", 1, 1);//textura de perder
 		textures[5]->load(renderer, "..//images/Menu1.png", 1, 1);//textura de menu modo jugar
 		textures[6]->load(renderer, "..//images/Menu2.png", 1, 1);//textura de menu modo salir
-		leeArchivo("level0" + std::to_string(nivel) + ".dat");
+		textures[7]->load(renderer, "..//images/score.png", 2, 6);
 	}
 }
 
@@ -49,7 +49,11 @@ void Game::run()
 		{ 
 			//si estamos sobre la opcion jugar representamos en pantalla con una flecha
 			textures[5]->render(renderer); //si pulsamos espacio jugamos
-			if (event.key.keysym.sym == SDLK_SPACE) menu = 3;
+			if (event.key.keysym.sym == SDLK_SPACE) 
+			{
+				leeArchivo("level0" + std::to_string(nivel) + ".dat");
+				menu = 3; 
+			}
 		}
 		else
 		{
@@ -70,7 +74,8 @@ void Game::run()
 			update();//mandamos a las entidades que actualicen su posicion
 			render();//mandamos a las entidades que se pinten
 
-			if (numComida == 0)win = true;//si nos comemos la comida ganamos
+			if (numComida == 0)
+				win = true;//si nos comemos la comida ganamos
 
 			//temporiza el tiempo que puedes comerte a los fantasmas
 			if (temporizador)Temp++;
@@ -95,6 +100,9 @@ void Game::run()
 		if (menu == 3 && gameOver)
 		{ 
 			menu = 1;//salimos al menu tras un delay
+			gameOver = false;
+			nivel = 1;
+			score = 0;
 			textures[4]->render(renderer);
 			SDL_RenderPresent(renderer);
 			SDL_Delay(2000);
@@ -103,6 +111,9 @@ void Game::run()
 		else if (menu == 3 && win)
 		{
 			menu = 1;//salimos al menu tras un delay
+			win = false;
+			nivel = 1;
+			score = 0;
 			textures[3]->render(renderer); 
 			SDL_RenderPresent(renderer);
 			SDL_Delay(2000);
@@ -173,10 +184,30 @@ void Game::renderHud()
 	SDL_Rect destRect;
 	destRect.w = destRect.h = TAM;
 	destRect.x = cols*TAM;
-	destRect.y = 1;
+	destRect.y = 0;
 	for (int i = 0; i < pacman.getVidas(); i++) {
 		destRect.x += TAM;
 		textures[0]->renderFrame(renderer, destRect, 6, 2);
+	}
+	destRect.w = TAM * 4;
+	destRect.x -= TAM * 2;
+	destRect.y = TAM * 2;
+	textures[7]->renderFrame(renderer, destRect, 0, 0);
+	string sScore = std::to_string(score);
+	destRect.x += 4 * TAM;
+	for (int i = 0; i < sScore.length(); i++)
+	{
+		destRect.x += TAM;
+		if(sScore[i] == '0'){ textures[7]->renderFrame(renderer, destRect, 0, 1); }
+		else if (sScore[i] == '1') { textures[7]->renderFrame(renderer, destRect, 0, 2); }
+		else if (sScore[i] == '2') { textures[7]->renderFrame(renderer, destRect, 0, 3); }
+		else if (sScore[i] == '3') { textures[7]->renderFrame(renderer, destRect, 0, 4); }
+		else if (sScore[i] == '4') { textures[7]->renderFrame(renderer, destRect, 1, 0); }
+		else if (sScore[i] == '5') { textures[7]->renderFrame(renderer, destRect, 1, 1); }
+		else if (sScore[i] == '6') { textures[7]->renderFrame(renderer, destRect, 1, 2); }
+		else if (sScore[i] == '7') { textures[7]->renderFrame(renderer, destRect, 1, 3); }
+		else if (sScore[i] == '8') { textures[7]->renderFrame(renderer, destRect, 1, 4); }
+		else if (sScore[i] == '9') { textures[7]->renderFrame(renderer, destRect, 1, 5); }
 	}
 }
 
@@ -250,6 +281,7 @@ Fantasma Game::getFantasmas(int i) { return fantasmas[i]; }//devuelve el fantasm
 
 void Game::muereFantasma(int i) //mata al fantasma i
 {
+	addScore(100);
 	fantasmas[i].morir();
 }
 
@@ -268,6 +300,11 @@ int Game::getTam() { return TAM; }
 void Game::GameOver()
 {
 	gameOver = true;
+}
+
+void Game::addScore(int ascore)
+{
+	score += ascore;
 }
 
 void Game::guardarPartida()

@@ -62,6 +62,7 @@ void PacMan::update()
 			if (game->nextCell(destRect.x, destRect.y, dirX, dirY) == vitamina)game->fantasmasComibles(true);
 			game->setCell((destRect.x + dirX) / game->getTam(), (destRect.y + dirY) / game->getTam(), vacio);
 			game->setComida(-1);
+			game->addScore(10);
 		}
 		destRect.x += dirX;
 		destRect.y += dirY;

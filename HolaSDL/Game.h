@@ -27,7 +27,7 @@ private:
 	bool exit = false;//booleano que indica cuando se sale del juego (bucle ppal.)
 	bool error = false;//informa de posibles errores
 	bool gameOver = false, win = false;//ganar o perder
-	int numComida = 0;//numero de comida del mapa
+	int numComida = 0, score = 0;//numero de comida del mapa
 	int fils, cols;//filas y columnas del tablero
 	int nivel = 1;//nivel actual
 	int Temp = 0;//temporizador
@@ -35,7 +35,7 @@ private:
 	GameMAP* gameMap;//tablero
 	PacMan pacman;//jugador
 	Fantasma fantasmas[4];//array con todos los fantasmas
-	Texture* textures[7];//punteros a textura que contiene todos los sprites del juego
+	Texture* textures[8];//punteros a textura que contiene todos los sprites del juego
 public:
 	Game();//carga la ventana y el tablero del juego
 	void run();//bucle ppal., dentro de el se ejecutan los siguientes metodos
@@ -55,6 +55,7 @@ public:
 	void fantasmasComibles(bool sonComibles);//establece todos los fantasmas a comibles o no comibles
 	PacMan getPacman();//devuelve a pacman
 	void renderHud();//pinta el numero de vidas
+	void addScore(int ascore);
 	void GameOver();//termina el juego
 	int getTam();//devuelve el tamaño del juego
 	MapCell nextCell(int posX, int posY, int dirX, int dirY);//devuelve el tipo de la casilla contigua en la direccion dada
