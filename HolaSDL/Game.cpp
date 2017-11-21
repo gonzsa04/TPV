@@ -113,7 +113,7 @@ void Game::run(int menu)
 		//framerate
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime < 120)
-			SDL_Delay(60 - frameTime);
+			SDL_Delay(180 - frameTime);
 
 		if (win && nivel < 5)
 		{
